@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css'; // Import file CSS
+import './Login.css';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -9,12 +9,9 @@ const Login = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        // Bạn có thể thực hiện xác thực ở đây (gọi API, v.v.)
         console.log('Username:', username);
         console.log('Password:', password);
-        
-        // Chuyển đến trang chính sau khi đăng nhập thành công
-        navigate('/home');
+        navigate('/');
     };
 
     return (
@@ -45,4 +42,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Login; // Đảm bảo bạn xuất component Login đúng cách

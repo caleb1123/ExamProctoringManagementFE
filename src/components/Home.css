@@ -1,0 +1,35 @@
+/* Home.css */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5; /* Màu nền nhẹ cho toàn trang */
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    height: 100vh; /* Chiều cao bằng 100% viewport */
+    text-align: center; /* Căn giữa văn bản */
+}
+
+h1 {
+    color: #333; /* Màu chữ cho tiêu đề */
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+
+.login-button {
+    padding: 12px 24px; /* Khoảng cách bên trong */
+    background-color: #4CAF50; /* Màu nền cho nút */
+    color: white; /* Màu chữ */
+    border: none; /* Không có đường viền */
+    border-radius: 5px; /* Bo góc cho nút */
+    cursor: pointer; /* Con trỏ chuột khi hover */
+    font-size: 16px; /* Kích thước chữ trong nút */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển tiếp */
+}
+
+.login-button:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}
