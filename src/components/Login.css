@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5; /* Màu nền nhẹ cho toàn trang */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Chiều cao bằng 100% viewport */
+}
+
+.form-container {
+    width: 400px; /* Chiều rộng của form */
+    padding: 40px;
+    border: 1px solid #e1e1e1; /* Đường viền mỏng */
+    border-radius: 10px; /* Bo góc lớn hơn */
+    background-color: #fff; /* Màu nền của form */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng */
+    transition: transform 0.3s; /* Hiệu ứng chuyển tiếp */
+}
+
+.form-container:hover {
+    transform: scale(1.02); /* Tăng nhẹ kích thước khi hover */
+}
+
+h2 {
+    text-align: center; /* Căn giữa tiêu đề */
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+    color: #333; /* Màu chữ cho tiêu đề */
+}
+
+label {
+    display: block; /* Đặt label thành block để xuống dòng */
+    margin-bottom: 5px; /* Khoảng cách dưới label */
+    font-weight: bold; /* Làm đậm chữ label */
+    color: #555; /* Màu chữ cho label */
+}
+
+input {
+    width: 100%; /* Chiều rộng đầy đủ */
+    padding: 12px; /* Khoảng cách bên trong */
+    margin-bottom: 15px; /* Khoảng cách dưới input */
+    border: 1px solid #ccc; /* Đường viền */
+    border-radius: 5px; /* Bo góc cho input */
+    transition: border-color 0.3s; /* Hiệu ứng chuyển tiếp */
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+}
+
+input:focus {
+    border-color: #4CAF50; /* Đổi màu viền khi input được chọn */
+    outline: none; /* Bỏ viền ngoài khi focus */
+}
+
+button {
+    width: 100%; /* Chiều rộng đầy đủ */
+    padding: 12px; /* Khoảng cách bên trong */
+    background-color: #4CAF50; /* Màu nền cho nút */
+    color: white; /* Màu chữ */
+    border: none; /* Không có đường viền */
+    border-radius: 5px; /* Bo góc cho nút */
+    cursor: pointer; /* Con trỏ chuột khi hover */
+    font-size: 16px; /* Kích thước chữ trong nút */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển tiếp */
+}
+
+button:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}
