@@ -1,14 +1,18 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import Login from './components/Login';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
+import Login from './components/Login';
+import Header from './components/header/Header';
 
 const App = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
     return (
         <Router>
+            <Header isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
             <Routes>
-                <Route path="/" element={<Home />} /> {/* Trang chính là Home */}
-                <Route path="/login" element={<Login />} /> {/* Đổi path thành /login */}
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
             </Routes>
         </Router>
     );

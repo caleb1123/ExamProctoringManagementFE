@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
-const Login = () => {
+const Login = ({ setIsAuthenticated }) => { // Nhận setIsAuthenticated từ props
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
-        console.log('Username:', username);
-        console.log('Password:', password);
-        navigate('/');
+        // Xử lý logic đăng nhập, có thể kiểm tra username/password giả định
+        if (username === 'admin' && password === '123456') {
+            setIsAuthenticated(true); // Đặt trạng thái đăng nhập thành công
+            navigate('/'); // Chuyển hướng về trang chủ
+        } else {
+            alert('Sai thông tin đăng nhập!');
+        }
     };
 
     return (
@@ -42,4 +46,4 @@ const Login = () => {
     );
 };
 
-export default Login; // Đảm bảo bạn xuất component Login đúng cách
+export default Login;
