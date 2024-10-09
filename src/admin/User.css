@@ -1,0 +1,50 @@
+.users-container {
+    padding: 20px;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table th, .users-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.users-table th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+.search-container {
+    margin-bottom: 20px; /* Space between search bar and table */
+    display: flex; /* Use flex to align elements horizontally */
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px; /* Adjust the gap between select and input */
+}
+
+.search-container select,
+.search-container input {
+    padding: 5px 10px; /* Adjust padding for input and select */
+    border-radius: 3px; /* Round corners */
+    border: 1px solid #ccc; /* Add a border */
+    width: 100%; /* Make input and select full width */
+    max-width: 300px; /* Set a maximum width */
+}
+
+button {
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: white;
+}
+
+/* Existing button container styling */
+.button-container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px; /* Adjust the gap between buttons */
+}
