@@ -22,6 +22,7 @@
     display: flex; /* Use flex to align elements horizontally */
     flex-direction: column; /* Stack items vertically */
     gap: 10px; /* Adjust the gap between select and input */
+    align-items: flex-end; /* Align items to the right */
 }
 
 .search-container select,
@@ -30,8 +31,9 @@
     border-radius: 3px; /* Round corners */
     border: 1px solid #ccc; /* Add a border */
     width: 100%; /* Make input and select full width */
-    max-width: 300px; /* Set a maximum width */
+    max-width: 200px; /* Set a maximum width */
 }
+
 
 button {
     padding: 5px 10px;
@@ -40,6 +42,7 @@ button {
     border-radius: 3px;
     background-color: #007bff;
     color: white;
+    
 }
 
 /* Existing button container styling */
@@ -47,4 +50,11 @@ button {
     display: flex;
     flex-direction: column; /* Stack items vertically */
     gap: 10px; /* Adjust the gap between buttons */
+    align-items: center; 
+}
+
+select {
+    padding: 5px 10px; /* Adjust padding */
+    border-radius: 3px; /* Round corners */
+    border: 1px solid #ccc; /* Add a border */
 }

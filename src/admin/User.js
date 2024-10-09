@@ -6,6 +6,8 @@ const Users = () => {
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('fullName'); // Default search category
+    const [statusFilter, setStatusFilter] = useState('all'); // Default to show all users
+    const [isMenuOpen, setIsMenuOpen] = useState(false); // State for dropdown menu
 
     // Simulating fetching users from an API or database
     useEffect(() => {
@@ -35,7 +37,7 @@ const Users = () => {
                     dob: '1998-11-20',
                     phoneNumber: '987-654-3210',
                     roleId: 2,
-                    status: true,
+                    status: false,
                 },
             ];
             setUsers(userList);
@@ -58,20 +60,26 @@ const Users = () => {
         }
     };
 
-    // Filter users based on the search term and category
+    // Function to toggle user status
+    const toggleStatus = (userId) => {
+        setUsers(users.map(user => 
+            user.userId === userId ? { ...user, status: !user.status } : user
+        ));
+    };
+
+    // Filter users based on the search term, category, and status
     const filteredUsers = users.filter(user => {
         const term = searchTerm.toLowerCase();
-        switch (searchCategory) {
-            case 'fullName':
-                return user.fullName.toLowerCase().includes(term);
-            case 'userName':
-                return user.userName.toLowerCase().includes(term);
-            case 'email':
-                return user.email.toLowerCase().includes(term);
-            default:
-                return true; // No filter
-        }
+        const matchesSearch = user[searchCategory].toLowerCase().includes(term);
+        const matchesStatus = statusFilter === 'all' || (statusFilter === 'active' ? user.status : !user.status);
+        return matchesSearch && matchesStatus;
     });
+
+    // Function to handle status filter
+    const handleStatusFilter = (status) => {
+        setStatusFilter(status);
+        setIsMenuOpen(false); // Close the menu after selecting
+    };
 
     return (
         <div className="users-container">
@@ -108,8 +116,22 @@ const Users = () => {
                         <th>Date of Birth</th>
                         <th>Phone Number</th>
                         <th>Role ID</th>
-                        <th>Status</th>
-                        <th>Action</th> {/* New Action Column */}
+                        <th>
+                            Status
+                            <button 
+                                onClick={() => setIsMenuOpen(!isMenuOpen)} 
+                            >
+                                ▼
+                            </button>
+                            {isMenuOpen && (
+                                <div className="status-menu">
+                                    <button onClick={() => handleStatusFilter('active')}>Active</button>
+                                    <button onClick={() => handleStatusFilter('inactive')}>Inactive</button>
+                                    <button onClick={() => handleStatusFilter('all')}>Show All</button>
+                                </div>
+                            )}
+                        </th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -125,7 +147,11 @@ const Users = () => {
                             <td>{user.dob}</td>
                             <td>{user.phoneNumber}</td>
                             <td>{user.roleId}</td>
-                            <td>{user.status ? 'Active' : 'Inactive'}</td>
+                            <td>
+                                <button onClick={() => toggleStatus(user.userId)}>
+                                    {user.status ? 'Active' : 'Inactive'}
+                                </button>
+                            </td>
                             <td>
                                 <div className="button-container">
                                     <button onClick={() => handleUpdate(user.userId)}>Update</button>
