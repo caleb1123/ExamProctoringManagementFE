@@ -13,7 +13,7 @@ const Login = ({ setIsAuthenticated }) => { // Nhận setIsAuthenticated từ pr
         // Xử lý logic đăng nhập, có thể kiểm tra username/password giả định
         if (username === 'admin' && password === '123456') {
             setIsAuthenticated(true); // Đặt trạng thái đăng nhập thành công
-            navigate('/'); // Chuyển hướng về trang chủ
+            navigate('/Admin'); // Chuyển hướng về trang chủ
         } else {
             alert('Sai thông tin đăng nhập!');
         }
