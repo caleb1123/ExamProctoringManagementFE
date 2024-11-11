@@ -1,25 +1,24 @@
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaSignOutAlt, FaCog } from 'react-icons/fa'; // Thêm icon từ react-icons
+import { FaUser, FaSignOutAlt, FaCog } from 'react-icons/fa';
 import './Header.css';
 
 const Header = ({ isAuthenticated, setIsAuthenticated }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // Trạng thái menu thả xuống
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        setIsAuthenticated(false); // Đặt lại trạng thái đăng xuất
-        navigate('/login'); // Chuyển hướng về trang login
-        setIsMenuOpen(false); // Đóng menu
+        setIsAuthenticated(false);
+        navigate('/login');
+        setIsMenuOpen(false);
     };
 
     const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen); // Toggle trạng thái menu
+        setIsMenuOpen((prev) => !prev);
     };
 
-    const handleMouseLeave = () => {
-        setIsMenuOpen(false); // Đóng menu khi chuột ra ngoài
-    };
+    const openMenu = () => setIsMenuOpen(true);
+    const closeMenu = () => setIsMenuOpen(false);
 
     return (
         <header className="header">
@@ -32,7 +31,11 @@ const Header = ({ isAuthenticated, setIsAuthenticated }) => {
                     <li><Link to="/about">About</Link></li>
                     <li><Link to="/services">Services</Link></li>
                     <li><Link to="/contact">Contact</Link></li>
-                    <li className="dropdown" onMouseLeave={handleMouseLeave}>
+                    <li
+                        className="dropdown"
+                        onMouseEnter={openMenu}
+                        onMouseLeave={closeMenu}
+                    >
                         <button className="auth-button" onClick={toggleMenu}>
                             <FaUser /> Account
                         </button>
