@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Admin.css'; // Import the same CSS for styling
 
 const HeaderAdmin = ({ activeMenu, handleMenuClick, handleLogout }) => {
+    const [isGroupRoomOpen, setIsGroupRoomOpen] = useState(false);
+
+    const toggleGroupRoom = () => {
+        setIsGroupRoomOpen(!isGroupRoomOpen); // Toggle the dropdown visibility
+    };
+
     return (
         <div className="admin-sidebar">
             <h3>Admin Menu</h3>
@@ -23,6 +29,17 @@ const HeaderAdmin = ({ activeMenu, handleMenuClick, handleLogout }) => {
                 </li>
                 <li className={activeMenu === 'Settings' ? 'active' : ''} onClick={() => handleMenuClick('Settings')}>
                     Settings
+                </li>
+                {/* Dropdown for GroupRoom */}
+                <li className={isGroupRoomOpen ? 'active' : ''} onClick={toggleGroupRoom}>
+                    GroupRoom
+                    {isGroupRoomOpen && (
+                        <ul className="dropdown">
+                            <li onClick={() => handleMenuClick('Room')}>Room</li>
+                            <li onClick={() => handleMenuClick('Group')}>Group</li>
+                            <li onClick={() => handleMenuClick('GroupRoom')}>GroupRoom</li>
+                        </ul>
+                    )}
                 </li>
                 <li onClick={handleLogout}>
                     Logout
