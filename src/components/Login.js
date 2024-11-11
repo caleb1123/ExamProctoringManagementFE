@@ -16,7 +16,7 @@ const Login = ({ setIsAuthenticated }) => {
         setLoading(true); // Show loading spinner
         setStatusMessage(''); // Reset any previous messages
         try {
-            const response = await fetch('https://examprotoringmanagement.azurewebsites.net/api/Users/login', {
+            const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ const Login = ({ setIsAuthenticated }) => {
                 <form onSubmit={handleLogin} className="form-container">
                     <h2>Login</h2>
                     <div>
-                        <label>Username:</label>
+                        <label>Email:</label>
                         <input
                             type="text"
                             value={username}

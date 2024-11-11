@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Admin.css'; // Import the CSS file for styles
 import HeaderAdmin from './HeaderAdmin'; // Import the HeaderAdmin component
 import Users from './User'; // Import the Users component
+import Semesters from './Semesters'; // Import the Semesters component
 
 const Admin = () => {
     const [activeMenu, setActiveMenu] = useState('Dashboard'); // Track the active menu
@@ -30,6 +31,7 @@ const Admin = () => {
                 {activeMenu === 'Dashboard' && <p>This is the Dashboard page content.</p>}
                 {activeMenu === 'Users' && <Users />}  {/* Load the Users component */}
                 {activeMenu === 'Settings' && <p>This is the Settings page content.</p>}
+                {activeMenu === 'Semesters' && <Semesters />}  {/* Load the Semesters component */}
             </div>
         </div>
     );
