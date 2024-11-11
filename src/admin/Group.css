@@ -1,0 +1,77 @@
+/* Container for the entire page */
+.subjects-container {
+    margin: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+  
+  /* Title styling */
+  h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  /* Table styling */
+  .subjects-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  /* Table headers */
+  .subjects-table th,
+  .subjects-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* Header styling */
+  .subjects-table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  /* Alternate row colors */
+  .subjects-table tr:nth-child(even) {
+    background-color: #ecf0f1;
+  }
+  
+  /* Hover effect */
+  .subjects-table tr:hover {
+    background-color: #f2f7ff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  /* Table cell transition */
+  .subjects-table td {
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Loading and error styling */
+  .loading,
+  .error {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #e74c3c;
+    font-weight: 600;
+  }
+  
+  /* No groups available styling */
+  .no-subjects {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #f39c12;
+    font-weight: 500;
+  }
+  
