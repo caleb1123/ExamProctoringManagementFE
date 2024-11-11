@@ -125,3 +125,257 @@ h2 {
         width: 100%; /* Make the select take up full width on smaller screens */
     }
 }
+/* Container for the entire page */
+.subjects-container {
+    margin: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* Title styling */
+h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Table styling */
+.subjects-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Table headers */
+.subjects-table th,
+.subjects-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Header styling */
+.subjects-table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Alternate row colors */
+.subjects-table tr:nth-child(even) {
+    background-color: #ecf0f1;
+}
+
+/* Hover effect */
+.subjects-table tr:hover {
+    background-color: #f2f7ff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Table cell transition */
+.subjects-table td {
+    transition: background-color 0.3s ease;
+}
+
+/* Loading and error styling */
+.loading,
+.error {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* No subjects available styling */
+.no-subjects {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #f39c12;
+    font-weight: 500;
+}
+
+/* Filter container */
+.filter-container {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Ensure alignment of filter container */
+}
+
+.filter-container label {
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+/* Styling for dropdown (select) */
+.filter-container select {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    width: 200px; /* Specify a width to avoid it being too small */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .subjects-table th,
+    .subjects-table td {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .subjects-table {
+        font-size: 0.9rem;
+        overflow-x: auto;
+    }
+
+    .filter-container {
+        flex-direction: column; /* Stack the label and dropdown vertically on smaller screens */
+        align-items: flex-start;
+    }
+
+    .filter-container select {
+        width: 100%; /* Make the select take up full width on smaller screens */
+    }
+}
+/* Container for the entire page */
+.subjects-container {
+    margin: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* Title styling */
+h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Table styling */
+.subjects-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Table headers */
+.subjects-table th,
+.subjects-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Header styling */
+.subjects-table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Alternate row colors */
+.subjects-table tr:nth-child(even) {
+    background-color: #ecf0f1;
+}
+
+/* Hover effect */
+.subjects-table tr:hover {
+    background-color: #f2f7ff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Table cell transition */
+.subjects-table td {
+    transition: background-color 0.3s ease;
+}
+
+/* Loading and error styling */
+.loading,
+.error {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* No subjects available styling */
+.no-subjects {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #f39c12;
+    font-weight: 500;
+}
+
+/* Filter container */
+.filter-container {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Ensure alignment of filter container */
+}
+
+.filter-container label {
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+/* Styling for dropdown (select) */
+.filter-container select {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    width: 200px; /* Specify a width to avoid it being too small */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .subjects-table th,
+    .subjects-table td {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .subjects-table {
+        font-size: 0.9rem;
+        overflow-x: auto;
+    }
+
+    .filter-container {
+        flex-direction: column; /* Stack the label and dropdown vertically on smaller screens */
+        align-items: flex-start;
+    }
+
+    .filter-container select {
+        width: 100%; /* Make the select take up full width on smaller screens */
+    }
+}

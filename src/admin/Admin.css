@@ -1,42 +1,111 @@
+/* Main container with Flexbox layout */
 .admin-container {
     display: flex;
     min-height: 100vh; /* Full height */
+    font-family: 'Arial', sans-serif; /* Change to a cleaner font */
+    background-color: #ecf0f1; /* Light background for the content */
 }
 
+/* Sidebar Styling */
 .admin-sidebar {
-    width: 200px;
+    width: 250px;
     background-color: #2c3e50;
     color: white;
     padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2); /* Shadow for better depth */
+    transition: all 0.3s ease; /* Smooth transition on hover */
 }
 
 .admin-sidebar h3 {
+    text-align: center;
+    font-size: 1.8rem;
     margin-bottom: 20px;
+    color: #f1c40f; /* Add a golden color to the title */
 }
 
+/* Sidebar links list */
 .admin-sidebar ul {
     list-style-type: none;
     padding: 0;
+    margin-top: 20px;
 }
 
 .admin-sidebar li {
     margin-bottom: 10px;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 6px; /* Rounded corners */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Add smooth animations */
+}
+
+.admin-sidebar li:hover,
+.admin-sidebar li.active {
+    background-color: #2980b9; /* Hover/active background color */
+    color: white;
+    transform: translateX(5px); /* Slight push effect */
+}
+
+/* Dropdown submenu inside Sidebar */
+.dropdown {
+    padding-left: 20px;
+    background-color: #34495e;
+    margin-top: 5px;
+    display: block;
+    border-radius: 6px; /* Rounded corners */
+}
+
+.dropdown li {
     padding: 10px;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.admin-sidebar li:hover, .admin-sidebar li.active {
-    background-color: #34495e; /* Active or hover background color */
+.dropdown li:hover {
+    background-color: #16a085; /* Greenish hover effect */
+    color: white;
 }
 
+/* Admin content area */
 .admin-content {
     flex-grow: 1;
-    padding: 20px;
+    padding: 30px;
     background-color: #f5f5f5;
+    border-top-left-radius: 20px; /* Soft rounded top left corner */
+    border-top-right-radius: 20px; /* Soft rounded top right corner */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for content area */
 }
 
+/* Heading styling for content area */
 .admin-content h2 {
+    font-size: 2rem;
     margin-bottom: 20px;
+    color: #2c3e50; /* Dark text for readability */
+    font-weight: bold;
+}
+
+/* Sidebar when hovered (optional for mobile/desktop responsiveness) */
+.admin-sidebar:hover {
+    width: 280px; /* Expand sidebar on hover */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .admin-container {
+        flex-direction: column; /* Stack the sidebar and content vertically */
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        height: auto;
+        box-shadow: none;
+    }
+
+    .admin-content {
+        padding: 15px;
+    }
+
+    .admin-sidebar h3 {
+        font-size: 1.5rem; /* Smaller title font */
+    }
 }

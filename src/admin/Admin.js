@@ -6,6 +6,7 @@ import Users from './User'; // Import the Users component
 import Semesters from './Semesters'; // Import the Semesters component
 import Exams from './Exams'; // Import the Exams component
 import Subjects from './Subjects'; // Import the Subjects component
+import Room from './Room'; // Import the Room component
 
 const Admin = () => {
     const [activeMenu, setActiveMenu] = useState('Dashboard'); // Track the active menu
@@ -36,6 +37,7 @@ const Admin = () => {
                 {activeMenu === 'Semesters' && <Semesters />}  {/* Load the Semesters component */}
                 {activeMenu === 'Exams' && <Exams />}  {/* Load the Exams component */}
                 {activeMenu === 'Subjects' && <Subjects />}  {/* Load the Exams component */}
+                {activeMenu === 'Room' && <Room />}  {/* Load the Exams component */}
             </div>
         </div>
     );
