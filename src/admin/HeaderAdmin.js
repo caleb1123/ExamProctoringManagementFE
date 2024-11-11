@@ -15,6 +15,9 @@ const HeaderAdmin = ({ activeMenu, handleMenuClick, handleLogout }) => {
                 <li className={activeMenu === 'Settings' ? 'active' : ''} onClick={() => handleMenuClick('Settings')}>
                     Settings
                 </li>
+                <li className={activeMenu === 'Exams' ? 'active' : ''} onClick={() => handleMenuClick('Exams')}>
+                    Exams
+                </li>
                 <li className={activeMenu === 'Semesters' ? 'active' : ''} onClick={() => handleMenuClick('Semesters')}>
                     Semesters
                 </li>

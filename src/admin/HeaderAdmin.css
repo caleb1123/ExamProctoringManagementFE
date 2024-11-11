@@ -1,0 +1,40 @@
+/* Make the admin sidebar sticky */
+.admin-sidebar {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky; /* Make sidebar sticky */
+    top: 0; /* Stick to the top of the page */
+    height: 100vh; /* Make the sidebar take full height */
+    background-color: #f4f4f4; /* Set a background color */
+    padding: 20px; /* Add padding */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
+    z-index: 10; /* Ensure the sidebar is above other content */
+}
+
+/* Make sure that content doesn't overlap with the sidebar */
+.admin-content {
+    margin-left: 220px; /* Make space for the sidebar */
+    padding: 20px;
+    height: 100vh; /* Ensure the content area fills the screen */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Style for the menu items inside the sidebar */
+.admin-sidebar h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.admin-sidebar ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.admin-sidebar ul li.active {
+    background-color: #007bff;
+    color: white;
+}

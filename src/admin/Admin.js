@@ -4,6 +4,7 @@ import './Admin.css'; // Import the CSS file for styles
 import HeaderAdmin from './HeaderAdmin'; // Import the HeaderAdmin component
 import Users from './User'; // Import the Users component
 import Semesters from './Semesters'; // Import the Semesters component
+import Exams from './Exams'; // Import the Exams component
 
 const Admin = () => {
     const [activeMenu, setActiveMenu] = useState('Dashboard'); // Track the active menu
@@ -32,6 +33,7 @@ const Admin = () => {
                 {activeMenu === 'Users' && <Users />}  {/* Load the Users component */}
                 {activeMenu === 'Settings' && <p>This is the Settings page content.</p>}
                 {activeMenu === 'Semesters' && <Semesters />}  {/* Load the Semesters component */}
+                {activeMenu === 'Exams' && <Exams />}  {/* Load the Exams component */}
             </div>
         </div>
     );
