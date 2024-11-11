@@ -3,34 +3,65 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import Header from './header/Header';
 
-const Login = ({ setIsAuthenticated }) => { // Nhận setIsAuthenticated từ props
+const Login = ({ setIsAuthenticated }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false); // State for loading spinner
+    const [statusMessage, setStatusMessage] = useState(''); // State for success/error message
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // Xử lý logic đăng nhập, có thể kiểm tra username/password giả định
-        if (username === 'admin' && password === '123456') {
-            setIsAuthenticated(true); // Đặt trạng thái đăng nhập thành công
-            navigate('/Admin'); // Chuyển hướng về trang chủ
-        } else {
-            alert('Sai thông tin đăng nhập!');
+        setLoading(true); // Show loading spinner
+        setStatusMessage(''); // Reset any previous messages
+        try {
+            const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: username,
+                    password: password
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Login response:', data);
+                setIsAuthenticated(true);
+                setStatusMessage('Login successful! Redirecting...');
+                setTimeout(() => {
+                    navigate('/Admin'); // Redirect after a brief delay
+                }, 1000);
+            } else {
+                setStatusMessage('Sai thông tin đăng nhập!'); // Invalid login credentials
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+            setStatusMessage('Đã xảy ra lỗi trong quá trình đăng nhập!');
+        } finally {
+            setLoading(false); // Hide loading spinner
         }
     };
 
     const handleCreateAccount = () => {
-        navigate('/signup'); // Chuyển hướng đến trang đăng ký
+        navigate('/signup');
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
         <div>
-            <Header isAuthenticated={false} /> {/* Truyền isAuthenticated vào Header */}
+            <Header isAuthenticated={false} />
             <div className="container">
                 <form onSubmit={handleLogin} className="form-container">
                     <h2>Login</h2>
                     <div>
-                        <label>Username:</label>
+                        <label>Email:</label>
                         <input
                             type="text"
                             value={username}
@@ -38,15 +69,28 @@ const Login = ({ setIsAuthenticated }) => { // Nhận setIsAuthenticated từ pr
                             required
                         />
                     </div>
-                    <div>
+                    <div style={{ position: 'relative' }}>
                         <label>Password:</label>
                         <input
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            style={{ marginBottom: '0' }} // Đảm bảo không có khoảng cách dưới trường nhập
+                            style={{ marginBottom: '0', paddingRight: '30px' }}
                         />
+                        <span
+                            onClick={togglePasswordVisibility}
+                            style={{
+                                position: 'absolute',
+                                right: '10px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                cursor: 'pointer',
+                                color: showPassword ? 'blue' : 'gray'
+                            }}
+                        >
+                            {showPassword ? '👁️' : '👁️‍🗨️'}
+                        </span>
                         <div style={{ marginTop: '0px' }}>
                             <a
                                 onClick={handleCreateAccount}
@@ -54,35 +98,37 @@ const Login = ({ setIsAuthenticated }) => { // Nhận setIsAuthenticated từ pr
                                     color: 'blue',
                                     textDecoration: 'underline',
                                     cursor: 'pointer',
-                                    display: 'block', // Để liên kết hiển thị trên một dòng riêng
-                                    marginTop: '5px', // Thêm khoảng cách trên liên kết nếu cần
-                                    marginBottom: '10px', // Bạn có thể xóa dòng này nếu không muốn khoảng cách dưới liên kết
+                                    display: 'block',
+                                    marginTop: '5px',
+                                    marginBottom: '10px'
                                 }}
                             >
                                 Don't have an account?
                             </a>
                         </div>
-                    
-
-
+                    </div>
                     <button
                         type="submit"
                         style={{
-                            fontSize: '18px',   // Kích thước chữ
-                            padding: '10px 20px', // Kích thước khoảng cách bên trong
-                            borderRadius: '5px', // Bo tròn các góc
-                            cursor: 'pointer', // Đổi con trỏ chuột khi di chuột qua nút
-                            transition: 'background-color 0.3s' // Hiệu ứng chuyển màu
+                            fontSize: '18px',
+                            padding: '10px 20px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.3s'
                         }}
+                        disabled={loading} // Disable button when loading
                     >
-                        Login
+                        {loading ? 'Logging in...' : 'Login'}
                     </button>
+                    {loading && <div className="spinner"></div>} {/* Loading spinner */}
+                    {statusMessage && (
+                        <div className="status-message">
+                            {statusMessage}
+                        </div>
+                    )}
+                </form>
             </div>
-
-
-        </form>
-            </div >
-        </div >
+        </div>
     );
 };
 
