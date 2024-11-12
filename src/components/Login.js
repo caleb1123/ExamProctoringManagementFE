@@ -7,14 +7,14 @@ const Login = ({ setIsAuthenticated }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false); // State for loading spinner
-    const [statusMessage, setStatusMessage] = useState(''); // State for success/error message
+    const [loading, setLoading] = useState(false);
+    const [statusMessage, setStatusMessage] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setLoading(true); // Show loading spinner
-        setStatusMessage(''); // Reset any previous messages
+        setLoading(true);
+        setStatusMessage('');
         try {
             const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/login', {
                 method: 'POST',
@@ -30,19 +30,31 @@ const Login = ({ setIsAuthenticated }) => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Login response:', data);
+
+                // Store JWT and refresh tokens in localStorage
+                localStorage.setItem('jwtToken', data.data.jwtToken);
+                localStorage.setItem('refreshToken', data.data.refreshToken);
+
+                // Check the role and navigate accordingly
+                const role = data.data.roleName;
+                if (role === 'Trưởng Phòng Khảo Thí' || role === 'Nhân Viên Phòng Khảo Thí') {
+                    navigate('/Admin'); // Redirect to /Admin for specific roles
+                } else {
+                    navigate('/'); // Redirect to home for other roles
+                }
+
+                // Set authentication state to true
                 setIsAuthenticated(true);
+
                 setStatusMessage('Login successful! Redirecting...');
-                setTimeout(() => {
-                    navigate('/Admin'); // Redirect after a brief delay
-                }, 1000);
             } else {
-                setStatusMessage('Sai thông tin đăng nhập!'); // Invalid login credentials
+                setStatusMessage('Sai thông tin đăng nhập!');
             }
         } catch (error) {
             console.error('Error during login:', error);
             setStatusMessage('Đã xảy ra lỗi trong quá trình đăng nhập!');
         } finally {
-            setLoading(false); // Hide loading spinner
+            setLoading(false);
         }
     };
 
@@ -56,7 +68,6 @@ const Login = ({ setIsAuthenticated }) => {
 
     return (
         <div>
-            <Header isAuthenticated={false} />
             <div className="container">
                 <form onSubmit={handleLogin} className="form-container">
                     <h2>Login</h2>
@@ -116,11 +127,11 @@ const Login = ({ setIsAuthenticated }) => {
                             cursor: 'pointer',
                             transition: 'background-color 0.3s'
                         }}
-                        disabled={loading} // Disable button when loading
+                        disabled={loading}
                     >
                         {loading ? 'Logging in...' : 'Login'}
                     </button>
-                    {loading && <div className="spinner"></div>} {/* Loading spinner */}
+                    {loading && <div className="spinner"></div>}
                     {statusMessage && (
                         <div className="status-message">
                             {statusMessage}
