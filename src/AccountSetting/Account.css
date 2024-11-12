@@ -12,93 +12,62 @@
     color: #333;
 }
 
+
+
 h2 {
-    font-size: 26px;
-    color: #444;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #4CAF50;
-    display: inline-block;
-    padding-bottom: 5px;
-}
-
-.user-data {
-    margin-top: 20px;
-    text-align: left;
-}
-
-.user-data p {
-    font-size: 15px;
-    margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    padding: 8px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.user-data p strong {
-    font-weight: bold;
+    text-align: center;
     color: #333;
 }
 
-.user-data p span {
-    color: #555;
-    font-weight: 500;
+.account-field {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
 }
 
-.error {
-    color: #e74c3c;
+.account-field label {
     font-weight: bold;
-    font-size: 16px;
+    width: 30%;
+}
+
+.account-field input,
+.account-field select {
+    width: 65%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+/* Kiểu dáng cho nút khi chỉ có một nút duy nhất ở chế độ xem */
+.button-group {
+    display: flex;
+    justify-content: space-between;
     margin-top: 20px;
 }
 
-.loading {
-    font-size: 16px;
-    color: #777;
+.button-group.single-button {
+    justify-content: center; /* Căn giữa nếu chỉ có một nút */
 }
 
-/* Responsive design for mobile view */
-@media (max-width: 500px) {
-    .account-container {
-        width: 90%;
-        padding: 20px;
-    }
-}
-
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
+/* Nút chính */
 button {
-    margin-top: 10px;
-    padding: 10px 15px;
-    background-color: #4CAF50;
+    width: 48%;
+    padding: 12px;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
+    font-size: 1.2em;
     cursor: pointer;
-    font-size: 16px;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
 }
 
-.error {
-    color: red;
-    font-weight: bold;
-    margin-top: 20px;
+.cancel-button {
+    background-color: #dc3545;
 }
 
-.success {
-    color: #28a745;
-    margin-top: 15px;
-    font-weight: bold;
+.cancel-button:hover {
+    background-color: #c82333;
 }
-

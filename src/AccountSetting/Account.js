@@ -1,169 +1,137 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Account.css';
 
-const Account = () => {
-    const [userData, setUserData] = useState(null);
-    const [editedData, setEditedData] = useState(null);
-    const [error, setError] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
+function Account() {
+    const [userInfo, setUserInfo] = useState({
+        userId: '',
+        fullName: '',
+        address: '',
+        gender: '',
+        phone: '',
+        dob: '',
+        status: ''
+    });
+    const [originalUserInfo, setOriginalUserInfo] = useState({});  // State to store original user info
+    const [editMode, setEditMode] = useState(false);
+    const [error, setError] = useState('');
+    const token = localStorage.getItem('jwtToken');
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            const token = localStorage.getItem('jwtToken');
-
-            if (!token) {
-                setError('No token found. Please login first.');
-                return;
-            }
-
-            try {
-                const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/information', {
-                    method: 'GET',
-                    headers: {
-                        'accept': '*/*',
-                        'Authorization': `Bearer ${token}`
-                    },
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setUserData(data);
-                    setEditedData(data); // Initialize editedData with user data
-                } else {
-                    setError('Failed to fetch user data. Please try again.');
-                }
-            } catch (err) {
-                setError('An error occurred while fetching user data.');
-                console.error('Fetch error:', err);
-            }
-        };
-
-        fetchUserData();
-    }, []);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setEditedData({
-            ...editedData,
-            [name]: name === 'gender' ? value === 'true' : value
-        });
-    };
-
-    const updateUserData = async () => {
-        const token = localStorage.getItem('jwtToken');
-
         if (!token) {
             setError('No token found. Please login first.');
             return;
         }
 
-        try {
-            const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/update', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(editedData),
-            });
+        fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/information', {
+            method: 'GET',
+            headers: {
+                'accept': '*/*',
+                'Authorization': `Bearer ${token}`
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                const userData = {
+                    userId: data.userId,
+                    fullName: data.fullName,
+                    address: data.address,
+                    gender: data.gender ? 'Male' : 'Female',
+                    phone: data.phoneNumber,
+                    dob: new Date(data.doB).toISOString().slice(0, 10),
+                    status: data.status
+                };
+                setUserInfo(userData);
+                setOriginalUserInfo(userData);  // Save the original data
+            })
+            .catch(error => console.error('Error fetching user information:', error));
+    }, [token]);
 
-            if (response.ok) {
-                setUserData(editedData); // Update the displayed user data after a successful update
-                setIsEditing(false); // Exit edit mode
-            } else {
-                setError('Failed to update user data. Please try again.');
-            }
-        } catch (err) {
-            setError('An error occurred while updating user data.');
-            console.error('Update error:', err);
-        }
+    const handleEdit = () => {
+        setOriginalUserInfo(userInfo);  // Save the current user info before editing
+        setEditMode(true);
     };
 
-    const cancelEdit = () => {
-        setEditedData(userData); // Reset the editedData to the original userData
-        setIsEditing(false); // Exit edit mode
+    const handleCancel = () => {
+        setUserInfo(originalUserInfo);  // Revert to original data
+        setEditMode(false);
     };
 
-    if (error) {
-        return <div className="error">{error}</div>;
-    }
+    const handleSave = () => {
+        const updatedData = {
+            fullName: userInfo.fullName,
+            address: userInfo.address,
+            gender: userInfo.gender === 'Male',
+            phone: userInfo.phone,
+            dob: new Date(userInfo.dob).toISOString(),
+            status: userInfo.status
+        };
+
+        fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/update', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                setEditMode(false);
+                alert('User information updated successfully!');
+            })
+            .catch(error => console.error('Error updating user information:', error));
+    };
 
     return (
         <div className="account-container">
+            {error && <div className="error-message">{error}</div>}
             <h2>User Information</h2>
-            {userData ? (
-                <div className="user-data">
-                    <p><strong>User ID:</strong> {userData.userId}</p>
-                    {isEditing ? (
-                        <>
-                            <label>
-                                Full Name:
-                                <input
-                                    type="text"
-                                    name="fullName"
-                                    value={editedData.fullName}
-                                    onChange={handleInputChange}
-                                />
-                            </label>
-                            <label>
-                                Address:
-                                <input
-                                    type="text"
-                                    name="address"
-                                    value={editedData.address}
-                                    onChange={handleInputChange}
-                                />
-                            </label>
-                            <label>
-                                Gender:
-                                <select
-                                    name="gender"
-                                    value={editedData.gender}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value="true">Male</option>
-                                    <option value="false">Female</option>
-                                </select>
-                            </label>
-                            <label>
-                                Phone:
-                                <input
-                                    type="text"
-                                    name="phone"
-                                    value={editedData.phone}
-                                    onChange={handleInputChange}
-                                />
-                            </label>
-                            <label>
-                                Date of Birth:
-                                <input
-                                    type="date"
-                                    name="dob"
-                                    value={editedData.dob.split('T')[0]} // Format date for input
-                                    onChange={handleInputChange}
-                                />
-                            </label>
-                            <button onClick={updateUserData}>Update Information</button>
-                            <button onClick={cancelEdit}>Cancel</button>
-                        </>
-                    ) : (
-                        <>
-                            <p><strong>Username:</strong> {userData.userName}</p>
-                            <p><strong>Address:</strong> {userData.address}</p>
-                            <p><strong>Gender:</strong> {userData.gender ? 'Male' : 'Female'}</p>
-                            <p><strong>Email:</strong> {userData.email}</p>
-                            <p><strong>Phone:</strong> {userData.phone || 'N/A'}</p>
-                            <p><strong>Main Major:</strong> {userData.mainMajor}</p>
-                            <p><strong>Date of Birth:</strong> {new Date(userData.dob).toLocaleDateString()}</p>
-                            <button onClick={() => setIsEditing(true)}>Edit</button>
-                        </>
-                    )}
-                </div>
-            ) : (
-                <div>Loading user data...</div>
-            )}
+            <div className="account-field">
+                <label>User ID:</label>
+                <span>{userInfo.userId}</span>
+            </div>
+            <div className="account-field">
+                <label>Full Name:</label>
+                <input type="text" value={userInfo.fullName} onChange={e => setUserInfo({ ...userInfo, fullName: e.target.value })} disabled={!editMode} />
+            </div>
+            <div className="account-field">
+                <label>Address:</label>
+                <input type="text" value={userInfo.address} onChange={e => setUserInfo({ ...userInfo, address: e.target.value })} disabled={!editMode} />
+            </div>
+            <div className="account-field">
+                <label>Gender:</label>
+                <select value={userInfo.gender} onChange={e => setUserInfo({ ...userInfo, gender: e.target.value })} disabled={!editMode}>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div className="account-field">
+                <label>Phone:</label>
+                <input type="text" value={userInfo.phone} onChange={e => setUserInfo({ ...userInfo, phone: e.target.value })} disabled={!editMode} />
+            </div>
+            <div className="account-field">
+                <label>Date of Birth:</label>
+                <input type="date" value={userInfo.dob} onChange={e => setUserInfo({ ...userInfo, dob: e.target.value })} disabled={!editMode} />
+            </div>
+            <div className="account-field">
+                <label>Status:</label>
+                <select value={userInfo.status ? 'Active' : 'Inactive'} onChange={e => setUserInfo({ ...userInfo, status: e.target.value === 'Active' })} disabled={!editMode}>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+            <div className={`button-group ${!editMode ? 'single-button' : ''}`}>
+                {editMode ? (
+                    <>
+                        <button onClick={handleSave}>Save</button>
+                        <button onClick={handleCancel} className="cancel-button">Cancel</button>
+                    </>
+                ) : (
+                    <button onClick={handleEdit}>Edit</button>
+                )}
+            </div>
+
         </div>
     );
-};
+}
 
 export default Account;
