@@ -3,7 +3,7 @@
 .account-container {
     width: 80%;
     max-width: 500px;
-    margin: 50px auto; /* Centers the container horizontally */
+    margin: 50px auto;
     background-color: #ffffff;
     padding: 30px;
     border-radius: 10px;
@@ -12,9 +12,7 @@
     color: #333;
 }
 
-
-
-h2 {
+.account-container h2 {
     text-align: center;
     color: #333;
 }
@@ -37,19 +35,18 @@ h2 {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-/* Kiểu dáng cho nút khi chỉ có một nút duy nhất ở chế độ xem */
-.button-group {
+
+.account-container .button-group {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-.button-group.single-button {
-    justify-content: center; /* Căn giữa nếu chỉ có một nút */
+.account-container .button-group.single-button {
+    justify-content: center;
 }
 
-/* Nút chính */
-button {
+.account-container button {
     width: 48%;
     padding: 12px;
     background-color: #007bff;
@@ -60,14 +57,14 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.account-container button:hover {
     background-color: #0056b3;
 }
 
-.cancel-button {
+.account-container .cancel-button {
     background-color: #dc3545;
 }
 
-.cancel-button:hover {
+.account-container .cancel-button:hover {
     background-color: #c82333;
 }
