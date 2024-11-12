@@ -40,7 +40,7 @@ const Login = ({ setIsAuthenticated }) => {
                 if (role === 'Trưởng Phòng Khảo Thí' || role === 'Nhân Viên Phòng Khảo Thí') {
                     navigate('/Admin'); // Redirect to /Admin for specific roles
                 } else {
-                    navigate('/Home'); // Redirect to home for other roles
+                    navigate('/'); // Redirect to home for other roles
                 }
 
                 // Set authentication state to true
@@ -68,7 +68,6 @@ const Login = ({ setIsAuthenticated }) => {
 
     return (
         <div>
-            <Header isAuthenticated={false} />
             <div className="container">
                 <form onSubmit={handleLogin} className="form-container">
                     <h2>Login</h2>

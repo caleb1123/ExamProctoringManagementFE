@@ -1,3 +1,4 @@
+// Header.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaSignOutAlt, FaCog } from 'react-icons/fa';
@@ -8,15 +9,17 @@ const Header = ({ isAuthenticated, setIsAuthenticated }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        // Clear tokens from localStorage
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('refreshToken');
+        
+        // Reset authentication state
         setIsAuthenticated(false);
-        navigate('/login');
+        navigate('/login'); // Redirect to login page
         setIsMenuOpen(false);
     };
 
-    const toggleMenu = () => {
-        setIsMenuOpen((prev) => !prev);
-    };
-
+    const toggleMenu = () => setIsMenuOpen((prev) => !prev);
     const openMenu = () => setIsMenuOpen(true);
     const closeMenu = () => setIsMenuOpen(false);
 
@@ -40,7 +43,6 @@ const Header = ({ isAuthenticated, setIsAuthenticated }) => {
                             <FaUser /> Account
                         </button>
 
-                        {/* Menu thả xuống */}
                         {isMenuOpen && (
                             <div className="dropdown-menu">
                                 {isAuthenticated ? (
