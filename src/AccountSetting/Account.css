@@ -1,0 +1,104 @@
+/* Account.css */
+
+.account-container {
+    width: 80%;
+    max-width: 500px;
+    margin: 50px auto; /* Centers the container horizontally */
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    color: #333;
+}
+
+h2 {
+    font-size: 26px;
+    color: #444;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #4CAF50;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.user-data {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.user-data p {
+    font-size: 15px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.user-data p strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.user-data p span {
+    color: #555;
+    font-weight: 500;
+}
+
+.error {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.loading {
+    font-size: 16px;
+    color: #777;
+}
+
+/* Responsive design for mobile view */
+@media (max-width: 500px) {
+    .account-container {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.success {
+    color: #28a745;
+    margin-top: 15px;
+    font-weight: bold;
+}
+

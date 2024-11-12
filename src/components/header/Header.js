@@ -47,7 +47,7 @@ const Header = ({ isAuthenticated, setIsAuthenticated }) => {
                             <div className="dropdown-menu">
                                 {isAuthenticated ? (
                                     <>
-                                        <Link to="/account-settings" className="dropdown-item">
+                                        <Link to="/account" className="dropdown-item">
                                             <FaCog /> Account Settings
                                         </Link>
                                         <button onClick={handleLogout} className="dropdown-item">
