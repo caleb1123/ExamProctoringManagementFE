@@ -2,27 +2,41 @@ import React, { useState, useEffect, useRef } from 'react';
 import './User.css';
 
 const Users = () => {
+    
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('fullName');
     const [statusFilter, setStatusFilter] = useState('all');
     const [selectedUser, setSelectedUser] = useState(null);
-    const [createUser, setCreateUser] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const modalRef = useRef(null); // Create a ref for the modal
     const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+    const [createUser, setCreateUser] = useState({
+        userId: '',
+        userName: '',
+        fullName: '',
+        address: '',
+        email: '',
+        dob: '',
+        mainMajor: '',
+        phone: '',
+        roleId: '1',
+        gender: false,
+        // Remove `password` and `phoneNumber` if not needed
+    });
 
-    // Fetch users from the API
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/all');
+            const data = await response.json();
+            setUsers(data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    // Load users on component mount
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/all');
-                const data = await response.json();
-                setUsers(data);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
         fetchUsers();
     }, []);
 
@@ -75,9 +89,10 @@ const Users = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('User created:', data);
-                // Optionally, you can update the users list after successful creation
+                // Update the users list and close the modal after successful creation
                 setUsers((prevUsers) => [...prevUsers, data]);
-                handleCloseModal(); // Close the modal after successful creation
+                fetchUsers();
+                handleCloseModal();
             } else {
                 console.error('Error creating user:', response.statusText);
             }
@@ -85,10 +100,16 @@ const Users = () => {
             console.error('Error creating user:', error);
         }
     };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setSelectedUser(prevState => ({ ...prevState, [name]: value }));
+        if (isModalCreateOpen) {
+            setCreateUser(prevState => ({ ...prevState, [name]: value }));
+        } else {
+            setSelectedUser(prevState => ({ ...prevState, [name]: value }));
+        }
     };
+
     // Open the create user modal
     const handleCreateUserClick = () => {
         setSelectedUser({}); // Reset selectedUser to an empty object
@@ -274,7 +295,7 @@ const Users = () => {
                                     Password:
                                     <input
                                         type="text"
-                                        name="Password"
+                                        name="password"
                                         value={createUser.password}
                                         onChange={handleInputChange}
                                     />
@@ -307,6 +328,15 @@ const Users = () => {
                                     />
                                 </label>
                                 <label>
+                                    Date of Birth:
+                                    <input
+                                        type="date"
+                                        name="dob"
+                                        value={createUser.dob || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
                                     Main Major:
                                     <input
                                         type="text"
@@ -319,8 +349,8 @@ const Users = () => {
                                     Phone Number:
                                     <input
                                         type="text"
-                                        name="phoneNumber"
-                                        value={createUser.phoneNumber || ''}
+                                        name="phone"
+                                        value={createUser.phone || ''}
                                         onChange={handleInputChange}
                                     />
                                 </label>
@@ -339,16 +369,16 @@ const Users = () => {
                                 <label>
                                     Gender:
                                     <select
-                                        name="status"
-                                        value={createUser.gender ? 'Active' : 'Inactive'}
+                                        name="gender"  // Changed to "gender"
+                                        value={createUser.gender ? 'Male' : 'Female'}  // Set correct value for display
                                         onChange={(e) =>
                                             handleInputChange({
-                                                target: { name: 'status', value: e.target.value === 'Active' },
+                                                target: { name: 'gender', value: e.target.value === 'Male' },
                                             })
                                         }
                                     >
-                                        <option value="Active">Male</option>
-                                        <option value="Inactive">Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
                                 </label>
                             </form>
