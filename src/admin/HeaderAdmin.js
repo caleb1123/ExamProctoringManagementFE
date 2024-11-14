@@ -30,6 +30,9 @@ const HeaderAdmin = ({ activeMenu, handleMenuClick, handleLogout }) => {
                 <li className={activeMenu === 'SlotReference' ? 'active' : ''} onClick={() => handleMenuClick('SlotReference')}>
                     SlotReference
                 </li>
+                <li className={activeMenu === 'Slot' ? 'active' : ''} onClick={() => handleMenuClick('Slot')}>
+                Slot
+                </li>
                 <li className={activeMenu === 'ProtoringSchedule' ? 'active' : ''} onClick={() => handleMenuClick('ProtoringSchedule')}>
                 ProtoringSchedule
                 </li>

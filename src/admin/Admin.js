@@ -12,6 +12,7 @@ import GroupRoom from './GroupRoom'; // Import the GroupRoom component
 import SlotReference from './SlotReference'; // Import the SlotReference component
 import ProtoringSchedule from './ProtoringSchedule'; // Import the ProtoringSchedule component
 import RegistrationForm from './RegistrationForm'; // Import the RegistrationForm component
+import Slot from './Slot';
 
 const Admin = () => {
     const [activeMenu, setActiveMenu] = useState('Dashboard'); // Track the active menu
@@ -47,6 +48,7 @@ const Admin = () => {
                 {activeMenu === 'GroupRoom' && <GroupRoom />}  {/* Load the Exams component */}
                 {activeMenu === 'SlotReference' && <SlotReference />}  {/* Load the Exams component */}
                 {activeMenu === 'ProtoringSchedule' && <ProtoringSchedule />}  {/* Load the Exams component */}
+                {activeMenu === 'Slot' && <Slot />}  {/* Load the Exams component */}
                 {activeMenu === 'RegistrationForm' && <RegistrationForm />}  {/* Load the Exams component */}
 
             </div>

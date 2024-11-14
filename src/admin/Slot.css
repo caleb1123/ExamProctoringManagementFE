@@ -1,0 +1,208 @@
+/* Container for the entire page */
+.slot-container {
+    margin: 30px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    max-width: 1200px; /* Optional: limits the maximum width of the content */
+    text-align: center; /* Centers the title and button */
+}
+
+/* Title styling */
+h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Table styling */
+.slot-list {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    margin-left: auto; /* Center the table horizontally */
+    margin-right: auto; /* Center the table horizontally */
+}
+
+/* Table headers */
+.slots-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Table headers */
+.slots-table th,
+.slots-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Header styling */
+.slots-table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Alternate row colors */
+.slots-table tr:nth-child(even) {
+    background-color: #ecf0f1;
+}
+
+/* Hover effect */
+.slots-table tr:hover {
+    background-color: #f2f7ff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Table cell transition */
+.slots-table td {
+    transition: background-color 0.3s ease;
+}
+
+/* Active status styling */
+.slots-table .status-active {
+    color: #27ae60;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+/* Inactive status styling */
+.slots-table .status-inactive {
+    color: #e74c3c;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+/* Loading and error styling */
+.loading,
+.error {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* No semesters available styling */
+.no-semesters {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #f39c12;
+    font-weight: 500;
+}
+
+/* Filter container */
+.filter-container {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Ensure alignment of filter container */
+}
+
+.filter-container label {
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+/* Styling for dropdown (select) */
+.filter-container select {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    width: 200px; /* Specify a width to avoid it being too small */
+}
+
+
+
+
+
+/* Modal styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it's above other elements */
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content button {
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.modal-content button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.modal-content button[type="button"] {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .slot-container {
+        padding: 20px; /* Adjust container padding */
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .slots-table th,
+    .slots-table td {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+   
+
+    .filter-container {
+        flex-direction: column; /* Stack the label and dropdown vertically */
+        align-items: flex-start;
+    }
+
+    .filter-container select {
+        width: 100%; /* Make select take full width on smaller screens */
+    }
+}
