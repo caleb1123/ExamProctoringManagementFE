@@ -7,6 +7,7 @@ import Admin from './admin/Admin';
 import Header from './components/header/Header';
 import Account from './AccountSetting/Account';
 import Exam from './components/exam/exam'
+import View from './components/view/View'
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('jwtToken'));
@@ -23,6 +24,7 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                 <Route path="/account" element={<Account />} />
+                <Route path="/view" element={<View />} />
                 <Route path="/exam" element={<Exam />} />
                 <Route path="/admin" element={<PrivateRoute element={<Admin />} />} />
             </Routes>

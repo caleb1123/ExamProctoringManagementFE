@@ -6,9 +6,10 @@ function Exam() {
   const [schedules, setSchedules] = useState([]);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [token, setToken] = useState(""); // JWT token state
 
   useEffect(() => {
-    // Gọi API để lấy lịch gác thi
+    // Fetch schedules from API
     axios
       .get("https://examproctoringmanagement.azurewebsites.net/api/ProctoringSchedule/proctoringSlot")
       .then((response) => {
@@ -17,26 +18,54 @@ function Exam() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+
+    // Example: Set token from localStorage or other secure storage
+    const savedToken = localStorage.getItem("jwtToken");
+    if (savedToken) {
+      setToken(savedToken);
+    }
   }, []);
 
-  // Chuyển đổi định dạng ngày tháng
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("vi-VN", { year: "numeric", month: "2-digit", day: "2-digit" });
   };
 
-  // Xử lý sự kiện khi nhấn nút đăng ký
   const handleRegisterClick = (schedule) => {
     setSelectedSchedule(schedule);
     setShowPopup(true);
   };
 
-  // Đóng popup
   const closePopup = () => {
     setShowPopup(false);
     setSelectedSchedule(null);
   };
 
+  const confirmRegistration = () => {
+    if (!selectedSchedule) return;
+  
+    // Create registration data
+    const requestData = {
+      proctoringID: selectedSchedule.proctoringId
+    };
+  
+    // Send registration request with explicit Content-Type
+    axios.post("https://examproctoringmanagement.azurewebsites.net/api/RegistrationForm/create", requestData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    .then(() => {
+      alert("Đã đăng ký thành công!");
+      closePopup();
+    })
+    .catch((error) => {
+      console.error("Error registering:", error);
+      alert("Đăng ký thất bại. Vui lòng thử lại.");
+    });
+  };
+  
   return (
     <div className="schedule-container">
       <h2>Lịch Gác Thi</h2>
@@ -51,7 +80,6 @@ function Exam() {
         ))}
       </div>
 
-      {/* Popup chi tiết lịch gác thi */}
       {showPopup && selectedSchedule && (
         <div className="popup">
           <div className="popup-content">
@@ -61,7 +89,7 @@ function Exam() {
             <p><strong>Giờ:</strong> {selectedSchedule.startDate} - {selectedSchedule.endDate}</p>
             <p><strong>Số lượng:</strong> {selectedSchedule.count ?? "Chưa có"}</p>
             <button onClick={closePopup}>Hủy</button>
-            <button onClick={() => alert("Đã đăng ký thành công!")}>Xác nhận đăng ký</button>
+            <button onClick={confirmRegistration}>Xác nhận đăng ký</button>
           </div>
         </div>
       )}

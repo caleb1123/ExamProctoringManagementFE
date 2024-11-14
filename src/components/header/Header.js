@@ -31,16 +31,16 @@ const Header = ({ isAuthenticated, setIsAuthenticated }) => {
             <nav className="header-nav">
                 <ul>
                     <li><Link to="/">Home</Link></li>
-                    <li><Link to="/view">View Invigilation Schedule</Link></li>
-                    <li><Link to="/exam">Exam Invigilation Sign-up</Link></li>
-                    <li><Link to="/reschedule">Reschedule Invigilation</Link></li>
+                    <li><Link to="/view">Xem lịch đăng ký gác thi</Link></li>
+                    <li><Link to="/exam">Đăng ký gác thi</Link></li>
+                    <li><Link to="/reschedule">Đơn chuyển gác thi</Link></li>
                     <li
                         className="dropdown"
                         onMouseEnter={openMenu}
                         onMouseLeave={closeMenu}
                     >
                         <button className="auth-button" onClick={toggleMenu}>
-                            <FaUser /> Account
+                            <FaUser />Tài khoản
                         </button>
 
                         {isMenuOpen && (
@@ -48,10 +48,10 @@ const Header = ({ isAuthenticated, setIsAuthenticated }) => {
                                 {isAuthenticated ? (
                                     <>
                                         <Link to="/account" className="dropdown-item">
-                                            <FaCog /> Account Settings
+                                            <FaCog /> Chỉnh sửa tài khoản
                                         </Link>
                                         <button onClick={handleLogout} className="dropdown-item">
-                                            <FaSignOutAlt /> Logout
+                                            <FaSignOutAlt /> Đăng xuất
                                         </button>
                                     </>
                                 ) : (

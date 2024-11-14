@@ -70,7 +70,7 @@ const Login = ({ setIsAuthenticated }) => {
         <div>
             <div className="container">
                 <form onSubmit={handleLogin} className="form-container">
-                    <h2>Login</h2>
+                    <h2>Đăng nhập</h2>
                     <div>
                         <label>Email:</label>
                         <input
@@ -81,7 +81,7 @@ const Login = ({ setIsAuthenticated }) => {
                         />
                     </div>
                     <div style={{ position: 'relative' }}>
-                        <label>Password:</label>
+                        <label>Mật khẩu:</label>
                         <input
                             type={showPassword ? 'text' : 'password'}
                             value={password}
@@ -129,7 +129,7 @@ const Login = ({ setIsAuthenticated }) => {
                         }}
                         disabled={loading}
                     >
-                        {loading ? 'Logging in...' : 'Login'}
+                        {loading ? 'Đang đăng nhập...' : 'Login'}
                     </button>
                     {loading && <div className="spinner"></div>}
                     {statusMessage && (
