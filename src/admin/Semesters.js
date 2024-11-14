@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Semesters.css'; // Import CSS file for styling
+import './Semesters.css';
 
 const Semesters = () => {
     const [semesters, setSemesters] = useState([]);
@@ -10,7 +10,7 @@ const Semesters = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [semesterIdToEdit, setSemesterIdToEdit] = useState(null);
-    const [newSemester, setNewSemester] = useState({
+    const [semesterDetails, setSemesterDetails] = useState({
         semesterId: '',
         semesterName: '',
         fromDate: '',
@@ -18,14 +18,11 @@ const Semesters = () => {
         status: true,
     });
 
-    // Fetch semesters data from API
     useEffect(() => {
         const fetchSemesters = async () => {
             try {
                 const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Semester');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch semesters');
-                }
+                if (!response.ok) throw new Error('Failed to fetch semesters');
                 const data = await response.json();
                 setSemesters(data);
                 setFilteredSemesters(data);
@@ -35,11 +32,9 @@ const Semesters = () => {
                 setLoading(false);
             }
         };
-
         fetchSemesters();
     }, []);
 
-    // Filter semesters based on status
     useEffect(() => {
         if (statusFilter === 'All') {
             setFilteredSemesters(semesters);
@@ -50,16 +45,25 @@ const Semesters = () => {
         }
     }, [statusFilter, semesters]);
 
-    // Handle filter change
-    const handleFilterChange = (event) => {
-        setStatusFilter(event.target.value);
+    const handleFilterChange = (event) => setStatusFilter(event.target.value);
+    const fetchSemesters = async () => {
+        try {
+            const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Semester');
+            if (!response.ok) throw new Error('Failed to fetch semesters');
+            const data = await response.json();
+            setSemesters(data);
+            setFilteredSemesters(data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    // Handle modal state change
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
         setIsEditMode(false);
-        setNewSemester({
+        setSemesterDetails({
             semesterId: '',
             semesterName: '',
             fromDate: '',
@@ -68,75 +72,66 @@ const Semesters = () => {
         });
     };
 
-    // Handle input changes for new semester
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewSemester((prev) => ({
+        setSemesterDetails((prev) => ({
             ...prev,
             [name]: value,
         }));
     };
 
-    // Handle form submission to create or update a semester
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const url = isEditMode
+            ? `https://examproctoringmanagement.azurewebsites.net/api/Semester/update`
+            : 'https://examproctoringmanagement.azurewebsites.net/api/Semester/create';
+        const method = isEditMode ? 'PUT' : 'POST';
+    
+        // Ensure status is boolean
+        const updatedDetails = {
+            ...semesterDetails,
+            status: semesterDetails.status === 'true' ? true : false, // Convert string to boolean
+        };
+    
         try {
-            const url = isEditMode
-                ? `https://examproctoringmanagement.azurewebsites.net/api/Semester/update/${semesterIdToEdit}`
-                : 'https://examproctoringmanagement.azurewebsites.net/api/Semester/create';
-            const method = isEditMode ? 'PUT' : 'POST';
-
             const response = await fetch(url, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newSemester),
+                body: JSON.stringify(updatedDetails),
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to save semester');
-            }
-
+            if (!response.ok) throw new Error('Failed to save semester');
+    
             const data = await response.json();
-
+    
             if (isEditMode) {
-                setSemesters(
-                    semesters.map((semester) =>
-                        semester.semesterId === semesterIdToEdit ? data : semester
-                    )
-                );
+                setSemesters(semesters.map((semester) =>
+                    semester.semesterId === semesterIdToEdit ? data : semester
+                ));
             } else {
-                setSemesters([...semesters, data]); // Add the new semester to the list
+                setSemesters([...semesters, data]);
             }
-            
-            setIsModalOpen(false); // Close the modal
+            fetchSemesters();
+            setIsModalOpen(false);
         } catch (error) {
             setError(error.message);
         }
     };
-
-    // Handle edit semester
+    
     const handleEdit = (semesterId) => {
         const semester = semesters.find((s) => s.semesterId === semesterId);
-        setNewSemester(semester);
+        setSemesterDetails(semester);
         setSemesterIdToEdit(semesterId);
         setIsEditMode(true);
         setIsModalOpen(true);
     };
 
-    // If data is loading or an error occurs
-    if (loading) {
-        return <div className="loading">Loading...</div>;
-    }
-
-    if (error) {
-        return <div className="error">Error: {error}</div>;
-    }
+    if (loading) return <div className="loading">Loading...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
 
     return (
         <div className="semesters-container">
             <h2>Manage Semesters</h2>
 
-            {/* Dropdown to filter by status */}
             <div className="filter-container">
                 <label htmlFor="statusFilter">Filter by Status: </label>
                 <select id="statusFilter" value={statusFilter} onChange={handleFilterChange}>
@@ -146,23 +141,21 @@ const Semesters = () => {
                 </select>
             </div>
 
-            {/* Create Button to open modal */}
             <button className="create-button" onClick={toggleModal}>
                 {isEditMode ? 'Edit Semester' : 'Create New Semester'}
             </button>
 
-            {/* Modal to create or edit semester */}
             {isModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>{isEditMode ? 'Edit Semester' : 'Create New Semester'}</h3>
+                        <h3>{isEditMode ? 'Create Semester' : 'Create New Semester'}</h3>
                         <form onSubmit={handleSubmit}>
                             <label>
                                 Semester ID:
                                 <input
                                     type="text"
                                     name="semesterId"
-                                    value={newSemester.semesterId}
+                                    value={semesterDetails.semesterId}
                                     onChange={handleInputChange}
                                     required
                                     disabled={isEditMode}
@@ -173,7 +166,7 @@ const Semesters = () => {
                                 <input
                                     type="text"
                                     name="semesterName"
-                                    value={newSemester.semesterName}
+                                    value={semesterDetails.semesterName}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -183,7 +176,7 @@ const Semesters = () => {
                                 <input
                                     type="datetime-local"
                                     name="fromDate"
-                                    value={newSemester.fromDate}
+                                    value={semesterDetails.fromDate}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -193,7 +186,7 @@ const Semesters = () => {
                                 <input
                                     type="datetime-local"
                                     name="toDate"
-                                    value={newSemester.toDate}
+                                    value={semesterDetails.toDate}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -202,7 +195,7 @@ const Semesters = () => {
                                 Status:
                                 <select
                                     name="status"
-                                    value={newSemester.status}
+                                    value={semesterDetails.status}
                                     onChange={handleInputChange}
                                 >
                                     <option value={true}>Active</option>
@@ -218,7 +211,6 @@ const Semesters = () => {
                 </div>
             )}
 
-            {/* Display message if no semesters */}
             {filteredSemesters.length === 0 ? (
                 <p className="no-semesters">No semesters available.</p>
             ) : (
