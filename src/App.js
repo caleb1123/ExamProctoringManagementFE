@@ -5,6 +5,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Admin from './admin/Admin';
 import Header from './components/header/Header';
+import Account from './AccountSetting/Account';
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('jwtToken'));
@@ -20,6 +21,8 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+                <Route path="/account" element={<Account />} />
+
                 <Route path="/admin" element={<PrivateRoute element={<Admin />} />} />
             </Routes>
         </Router>

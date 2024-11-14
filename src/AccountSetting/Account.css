@@ -1,0 +1,70 @@
+/* Account.css */
+
+.account-container {
+    width: 80%;
+    max-width: 500px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    color: #333;
+}
+
+.account-container h2 {
+    text-align: center;
+    color: #333;
+}
+
+.account-field {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.account-field label {
+    font-weight: bold;
+    width: 30%;
+}
+
+.account-field input,
+.account-field select {
+    width: 65%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.account-container .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.account-container .button-group.single-button {
+    justify-content: center;
+}
+
+.account-container button {
+    width: 48%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.account-container button:hover {
+    background-color: #0056b3;
+}
+
+.account-container .cancel-button {
+    background-color: #dc3545;
+}
+
+.account-container .cancel-button:hover {
+    background-color: #c82333;
+}

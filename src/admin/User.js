@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './User.css';
 
 const Users = () => {
+    
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCategory, setSearchCategory] = useState('fullName');
@@ -9,18 +10,33 @@ const Users = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const modalRef = useRef(null); // Create a ref for the modal
+    const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+    const [createUser, setCreateUser] = useState({
+        userId: '',
+        userName: '',
+        fullName: '',
+        address: '',
+        email: '',
+        dob: '',
+        mainMajor: '',
+        phone: '',
+        roleId: '1',
+        gender: false,
+        // Remove `password` and `phoneNumber` if not needed
+    });
 
-    // Fetch users from the API
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/all');
+            const data = await response.json();
+            setUsers(data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    // Load users on component mount
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/all');
-                const data = await response.json();
-                setUsers(data);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
         fetchUsers();
     }, []);
 
@@ -53,6 +69,7 @@ const Users = () => {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        setIsModalCreateOpen(false);
         setSelectedUser(null);
     };
 
@@ -60,15 +77,51 @@ const Users = () => {
         console.log('User updated:', selectedUser);
         handleCloseModal();
     };
+    const handleCreateUser = async () => {
+        try {
+            const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(createUser), // Send the form data
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('User created:', data);
+                // Update the users list and close the modal after successful creation
+                setUsers((prevUsers) => [...prevUsers, data]);
+                fetchUsers();
+                handleCloseModal();
+            } else {
+                console.error('Error creating user:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setSelectedUser(prevState => ({ ...prevState, [name]: value }));
+        if (isModalCreateOpen) {
+            setCreateUser(prevState => ({ ...prevState, [name]: value }));
+        } else {
+            setSelectedUser(prevState => ({ ...prevState, [name]: value }));
+        }
     };
 
+    // Open the create user modal
+    const handleCreateUserClick = () => {
+        setSelectedUser({}); // Reset selectedUser to an empty object
+        setIsModalCreateOpen(true);
+    };
     return (
         <div className="users-container">
             <h2>User Management</h2>
+            {/* Create User Button */}
+            <button onClick={handleCreateUserClick} className="create-button">
+                Create User
+            </button>
             <div className="search-container">
                 <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="filter">
                     <option value="all">All Statuses</option>
@@ -131,7 +184,7 @@ const Users = () => {
                 </tbody>
             </table>
 
-            {isModalOpen && selectedUser && (
+            {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content" ref={modalRef}>
                         <h3>Edit User</h3>
@@ -213,6 +266,131 @@ const Users = () => {
                     </div>
                 </div>
             )}
+
+            {isModalCreateOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content" ref={modalRef}>
+                        <h3>Add User</h3>
+                        <div className="modal-form">
+                            <form>
+                                <label>
+                                    UserID:
+                                    <input
+                                        type="text"
+                                        name="userId"
+                                        value={createUser.userId}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
+                                    Username:
+                                    <input
+                                        type="text"
+                                        name="userName"
+                                        value={createUser.userName}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
+                                    Password:
+                                    <input
+                                        type="text"
+                                        name="password"
+                                        value={createUser.password}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
+                                    Full Name:
+                                    <input
+                                        type="text"
+                                        name="fullName"
+                                        value={createUser.fullName}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
+                                    Address:
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        value={createUser.address}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
+                                    Email:
+                                    <input
+                                        type="text"
+                                        name="email"
+                                        value={createUser.email}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
+                                    Date of Birth:
+                                    <input
+                                        type="date"
+                                        name="dob"
+                                        value={createUser.dob || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
+                                    Main Major:
+                                    <input
+                                        type="text"
+                                        name="mainMajor"
+                                        value={createUser.mainMajor || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
+                                    Phone Number:
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        value={createUser.phone || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </label>
+                                <label>
+                                    Role ID:
+                                    <select
+                                        name="roleId"
+                                        value={createUser.roleId || ''}
+                                        onChange={handleInputChange}
+                                    >
+                                        <option value="1">Trưởng Phòng Khảo Thí</option>
+                                        <option value="2">Nhân Viên Phòng Khảo Thí</option>
+                                        <option value="3">Giảng Viên</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    Gender:
+                                    <select
+                                        name="gender"  // Changed to "gender"
+                                        value={createUser.gender ? 'Male' : 'Female'}  // Set correct value for display
+                                        onChange={(e) =>
+                                            handleInputChange({
+                                                target: { name: 'gender', value: e.target.value === 'Male' },
+                                            })
+                                        }
+                                    >
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </label>
+                            </form>
+                        </div>
+                        <div className="modal-buttons">
+                            <button onClick={handleCreateUser}>Add</button>
+                            <button onClick={handleCloseModal}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

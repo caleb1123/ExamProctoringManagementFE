@@ -94,7 +94,8 @@ h2 {
     margin: 20px 0;
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Ensure alignment of filter container */
+    justify-content: flex-start;
+    /* Ensure alignment of filter container */
 }
 
 .filter-container label {
@@ -110,11 +111,13 @@ h2 {
     border-radius: 4px;
     background-color: #fff;
     cursor: pointer;
-    width: 200px; /* Specify a width to avoid it being too small */
+    width: 200px;
+    /* Specify a width to avoid it being too small */
 }
 
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
+
     .exams-table th,
     .exams-table td {
         font-size: 0.9rem;
@@ -136,35 +139,87 @@ h2 {
     }
 
     .filter-container {
-        flex-direction: column; /* Stack the label and dropdown vertically on smaller screens */
+        flex-direction: column;
+        /* Stack the label and dropdown vertically on smaller screens */
         align-items: flex-start;
     }
 
     .filter-container select {
-        width: 100%; /* Make the select take up full width on smaller screens */
+        width: 100%;
+        /* Make the select take up full width on smaller screens */
     }
+
     /* Filter container */
-.filter-container {
-    margin: 20px 0;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Ensure alignment of filter container */
-}
+    .filter-container {
+        margin: 20px 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        /* Ensure alignment of filter container */
+    }
 
-.filter-container label {
-    font-size: 1rem;
-    margin-right: 10px;
-}
+    .filter-container label {
+        font-size: 1rem;
+        margin-right: 10px;
+    }
 
-/* Styling for dropdown (select) */
-.filter-container select {
-    font-size: 1rem;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    cursor: pointer;
-    width: 200px; /* Specify a width to avoid it being too small */
-}
+    /* Styling for dropdown (select) */
+    .filter-container select {
+        font-size: 1rem;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #fff;
+        cursor: pointer;
+        width: 200px;
+        /* Specify a width to avoid it being too small */
+    }
+    
+
+    .create-exam-form input, .create-exam-form select {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .create-exam-form label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    .create-exam-form .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .create-exam-form .status-container,
+    .create-exam-form .semester-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .create-exam-form .status-container select,
+    .create-exam-form .semester-container input {
+        width: 48%;
+    }
+    
+    button[type="submit"] {
+        background-color: #fdd660;
+        padding: 12px 20px;
+        border: none;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    
+    button[type="submit"]:hover {
+        background-color: #fbbd37;
+    }
+    
 
 }

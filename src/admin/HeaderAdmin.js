@@ -27,6 +27,9 @@ const HeaderAdmin = ({ activeMenu, handleMenuClick, handleLogout }) => {
                 <li className={activeMenu === 'Subjects' ? 'active' : ''} onClick={() => handleMenuClick('Subjects')}>
                     Subjects
                 </li>
+                <li className={activeMenu === 'SlotReference' ? 'active' : ''} onClick={() => handleMenuClick('SlotReference')}>
+                    SlotReference
+                </li>
                 {/* Dropdown for GroupRoom */}
                 <li className={isGroupRoomOpen ? 'active' : ''} onClick={toggleGroupRoom}>
                     GroupRoom
