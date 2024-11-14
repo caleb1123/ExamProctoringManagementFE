@@ -199,10 +199,7 @@ const RegistrationForm = () => {
         <div className="registrations-container">
             <h2>Registration Form List</h2>
 
-            <button onClick={() => setShowCreateForm(true)} className="create-registration-btn">
-                Create Registration
-            </button>
-
+        
             {showCreateForm && (
                 <div className="popup">
                     <div className="popup-content">
