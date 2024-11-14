@@ -199,10 +199,7 @@ const RegistrationForm = () => {
         <div className="registrations-container">
             <h2>Registration Form List</h2>
 
-            <button onClick={() => setShowCreateForm(true)} className="create-registration-btn">
-                Create Registration
-            </button>
-
+        
             {showCreateForm && (
                 <div className="popup">
                     <div className="popup-content">
@@ -235,8 +232,7 @@ const RegistrationForm = () => {
                                     ))}
                                 </select>
                             </label>
-                            
-                        
+
                             <label>
                                 Proctoring ID:
                                 <select
@@ -253,8 +249,8 @@ const RegistrationForm = () => {
                                     ))}
                                 </select>
                             </label>
-                            <label>
-                                Status:
+
+                            <label>Status:
                                 <select
                                     name="status"
                                     value={formData.status}
@@ -266,14 +262,21 @@ const RegistrationForm = () => {
                                 </select>
                             </label>
 
-                            <button type="submit" className="create-btn">{formData.formId ? 'Update Registration' : 'Create Registration'}</button>
-                            <button type="button" onClick={() => setShowCreateForm(false)} className="cancel-btn">
+                            <button type="submit" className="create-btn">
+                                {formData.formId ? 'Update Registration' : 'Create Registration'}
+                            </button>
+                            <button
+                                type="button"
+                                className="cancel-btn"
+                                onClick={() => setShowCreateForm(false)}
+                            >
                                 Cancel
                             </button>
                         </form>
                     </div>
                 </div>
             )}
+
 
             {/* Success Popup */}
             {showSuccessPopup && (
@@ -311,13 +314,11 @@ const RegistrationForm = () => {
                 </label>
             </div>
 
-            <table>
+            <table className="proctorings-table">
                 <thead>
                     <tr>
                         <th>Form ID</th>
                         <th>User ID</th>
-                        <th>Slot IDs</th>
-                        <th>Exam ID</th>
                         <th>Proctoring ID</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -332,7 +333,6 @@ const RegistrationForm = () => {
                             <td>{registration.status ? 'Active' : 'Inactive'}</td>
                             <td>
                                 <button onClick={() => handleEdit(registration)}>Edit</button>
-                                <button onClick={() => handleDelete(registration.formId)}>Delete</button>
                             </td>
                         </tr>
                     ))}

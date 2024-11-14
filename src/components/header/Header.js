@@ -31,9 +31,9 @@ const Header = ({ isAuthenticated, setIsAuthenticated }) => {
             <nav className="header-nav">
                 <ul>
                     <li><Link to="/">Home</Link></li>
-                    <li><Link to="/about">About</Link></li>
-                    <li><Link to="/services">Services</Link></li>
-                    <li><Link to="/contact">Contact</Link></li>
+                    <li><Link to="/view">View Invigilation Schedule</Link></li>
+                    <li><Link to="/exam">Exam Invigilation Sign-up</Link></li>
+                    <li><Link to="/reschedule">Reschedule Invigilation</Link></li>
                     <li
                         className="dropdown"
                         onMouseEnter={openMenu}
