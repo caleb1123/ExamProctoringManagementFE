@@ -4,7 +4,6 @@
     color: #333;
 }
 
-/* Proctoring table styling */
 .proctorings-table {
     width: 100%;
     border-collapse: collapse;
@@ -14,7 +13,6 @@
     overflow: hidden;
 }
 
-/* Table headers styling */
 .proctorings-table th,
 .proctorings-table td {
     padding: 12px;
@@ -24,164 +22,126 @@
     color: #555;
 }
 
-/* Header cells styling */
 .proctorings-table th {
     background-color: #3498db;
     color: white;
-    font-weight: bold;
-    text-transform: uppercase;
 }
 
-/* Alternate row colors */
-.proctorings-table tr:nth-child(even) {
-    background-color: #ecf0f1;
+.proctorings-table td {
+    background-color: #f9f9f9;
 }
 
-/* Hover effect */
-.proctorings-table tr:hover {
-    background-color: #f2f7ff;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+.status-active {
+    color: green;
 }
 
-/* Create Exam Button */
+.status-inactive {
+    color: red;
+}
+
 .create-exam-btn {
-    padding: 10px 20px;
-    background-color: #28a745; /* Blue */
+    background-color: #3498db;
     color: white;
+    padding: 10px 20px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    margin-bottom: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
-/* Create Exam Button Hover Effect */
 .create-exam-btn:hover {
-    background-color: #28a745;
+    background-color: #2980b9;
 }
 
-/* Popup Modal Styling for Create Exam */
 .popup {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Background overlay */
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 9999;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Modal Content Styling */
 .popup-content {
-    background: #fff;
+    background-color: white;
     padding: 20px;
-    width: 400px;
-    max-width: 90%;
-    max-height: 80vh; /* Max height of the modal */
-    overflow-y: auto;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
 }
 
-/* Modal Heading */
-.popup-content h3 {
-    margin-bottom: 15px;
-    font-size: 1.5em;
-    text-align: center;
-}
-
-/* Form styling */
-.popup-content form label {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 12px;
-    font-size: 14px;
-    color: #333;
-}
-
-/* Input and Select styling for the form */
-.popup-content form input,
-.popup-content form select {
-    padding: 8px;
-    font-size: 14px;
+form input,
+form select,
+form button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-top: 5px;
+    font-size: 1rem;
 }
 
-/* Create Exam Button inside the popup */
-.popup-content button.create-btn {
-    padding: 10px 20px;
-    background-color: #28a745; /* Blue */
+form button {
+    background-color: #3498db;
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
+    font-size: 1.1rem;
+}
+
+form button:hover {
+    background-color: #2980b9;
+}
+
+.cancel-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background-color: #c0392b;
+}
+
+.filter-container {
     margin-top: 20px;
-    text-align: center;
+    margin-bottom: 20px;
 }
 
-/* Create Exam Button Hover Effect inside the popup */
-.popup-content button.create-btn:hover {
-    background-color: #28a745;
+.filter-container label {
+    margin-right: 10px;
+    font-size: 1rem;
 }
 
-/* Cancel Button inside the popup */
-.popup-content button.cancel-btn {
-    padding: 10px 20px;
-    background-color: #f44336; /* Red */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    text-align: center;
-}
-
-/* Cancel Button Hover Effect inside the popup */
-.popup-content button.cancel-btn:hover {
-    background-color: #e53935;
-}
-
-/* Success Popup */
-.popup-content .success-popup {
-    background-color: #28a745;
-    color: white;
-    padding: 20px;
-    text-align: center;
+.filter-container select {
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-/* Success Popup Close Button */
-.popup-content .success-popup button {
-    background-color: #f44336;
-    padding: 10px 20px;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+.loading,
+.error,
+.no-schedules {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #e74c3c;
+    margin-top: 50px;
 }
 
-.popup-content .success-popup button:hover {
-    background-color: #e53935;
+.error {
+    color: red;
 }
 
-.delete-btn {
-    background-color: red;      /* Red background */
-    color: white;               /* White text color */
-    border: none;               /* Remove border */
-    padding: 8px 16px;          /* Add padding */
-    font-size: 14px;            /* Font size */
-    cursor: pointer;           /* Pointer cursor on hover */
-    border-radius: 4px;         /* Optional: rounded corners */
-    transition: background-color 0.3s ease;  /* Smooth background color transition */
+.loading {
+    color: orange;
 }
 
-.delete-btn:hover {
-    background-color: darkred;  /* Darker red on hover */
+.no-schedules {
+    color: grey;
 }
