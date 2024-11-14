@@ -16,7 +16,6 @@ const ProctoringSchedule = () => {
         userId: '',
         proctorType: '',
         slotReferenceId: '',
-        slotIds : '',
         status: true,
         isFinished: false,
         count: 0
@@ -140,7 +139,6 @@ const ProctoringSchedule = () => {
                         <form onSubmit={isEditing ? handleUpdate : handleSubmit}>
                             <input type="text" name="scheduleId" placeholder="Schedule ID" value={formData.scheduleId} onChange={handleChange} required />
                             <input type="text" name="userId" placeholder="User ID" value={formData.userId} onChange={handleChange} required />
-                            <input type="text" name="slotIds" placeholder="slot Id" value={formData.slotIds} onChange={handleChange} required />
                             <input type="text" name="proctorType" placeholder="Proctor Type" value={formData.proctorType} onChange={handleChange} required />
                             <input type="text" name="slotReferenceId" placeholder="Slot Reference ID" value={formData.slotReferenceId} onChange={handleChange} required />
                             <label>Status:
@@ -167,7 +165,6 @@ const ProctoringSchedule = () => {
                                         scheduleId: '',
                                         userId: '',
                                         proctorType: '',
-                                        slotIds: '',
                                         slotReferenceId: '',
                                         status: true,
                                         isFinished: false,
