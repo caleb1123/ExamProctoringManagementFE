@@ -11,13 +11,13 @@ const RegistrationForm = () => {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showErrorPopup, setShowErrorPopup] = useState(false);
+    const [users, setUsers] = useState([]); // New state to store users
+    const [proctoring, setProctorings] = useState([]);
 
     // Form data state
     const [formData, setFormData] = useState({
         formId: '',
         userId: '',
-        formSlotIds: [],
-        slotIds: [],
         examId: '',
         proctoringID: '',
         status: true,
@@ -32,11 +32,32 @@ const RegistrationForm = () => {
                 setFilteredRegistrations(response.data);
                 setLoading(false);
             } catch (err) {
-                setError('Error fetching data');
+                setError('Error fetching registration data');
                 setLoading(false);
             }
         };
+
+        const fetchproctoringsData = async () => {
+            try {
+                const response = await axios.get('https://examproctoringmanagement.azurewebsites.net/api/ProctoringSchedule'); // Update the URL to your API endpoint
+                setProctorings(response.data);
+            } catch (err) {
+                setError('Error fetching users data');
+            }
+        };
+
+        const fetchUsersData = async () => {
+            try {
+                const response = await axios.get('https://examproctoringmanagement.azurewebsites.net/api/Users/all'); // Update the URL to your API endpoint
+                setUsers(response.data);
+            } catch (err) {
+                setError('Error fetching users data');
+            }
+        };
+
         fetchRegistrationData();
+        fetchUsersData();
+        fetchproctoringsData();
     }, []);
 
     // Handle filter change
@@ -96,7 +117,7 @@ const RegistrationForm = () => {
                     }
                 );
             }
-            
+
             // Show success message
             setShowSuccessPopup(true);
 
@@ -117,8 +138,6 @@ const RegistrationForm = () => {
             setFormData({
                 formId: '',
                 userId: '',
-                formSlotIds: [],
-                slotIds: [],
                 examId: '',
                 proctoringID: '',
                 status: true,
@@ -132,29 +151,23 @@ const RegistrationForm = () => {
     };
 
     const handleDelete = async (formId) => {
-        // Confirm the deletion action
         if (window.confirm("Are you sure you want to delete this registration?")) {
             try {
-                // Sending the DELETE request to the API with the provided formId
                 const response = await axios.delete(
                     `https://examproctoringmanagement.azurewebsites.net/api/RegistrationForm/${formId}`
                 );
-    
-                // Check if the deletion was successful based on the response
+
                 if (response.status === 200) {
-                    // Remove the deleted registration from the state
                     setRegistrations((prevState) =>
                         prevState.filter((registration) => registration.formId !== formId)
                     );
                     setFilteredRegistrations((prevState) =>
                         prevState.filter((registration) => registration.formId !== formId)
                     );
-    
-                    // Optional: Show a success alert or popup
+
                     alert("Registration deleted successfully!");
                 }
             } catch (err) {
-                // Handle any errors that occur during the deletion
                 console.error("Error deleting registration:", err);
                 alert("Failed to delete the registration. Please try again.");
             }
@@ -166,8 +179,6 @@ const RegistrationForm = () => {
         setFormData({
             formId: registration.formId,
             userId: registration.userId,
-            formSlotIds: registration.formSlots.map(slot => slot.slotId),
-            slotIds: registration.slotIds,
             examId: registration.examId,
             proctoringID: registration.proctoringID,
             status: registration.status,
@@ -197,7 +208,6 @@ const RegistrationForm = () => {
                     <div className="popup-content">
                         <h3>{formData.formId ? 'Edit Registration' : 'Create Registration'}</h3>
                         <form onSubmit={handleSubmit}>
-                            {/* Form Fields */}
                             <label>
                                 Form ID:
                                 <input
@@ -206,38 +216,42 @@ const RegistrationForm = () => {
                                     value={formData.formId}
                                     onChange={handleChange}
                                     required
-                                    disabled={formData.formId !== ''}  // Disable if formId is set (edit mode)
+                                    disabled={formData.formId !== ''}
                                 />
                             </label>
                             <label>
                                 User ID:
-                                <input
-                                    type="text"
+                                <select
                                     name="userId"
                                     value={formData.userId}
                                     onChange={handleChange}
                                     required
-                                />
+                                >
+                                    <option value="">Select User</option>
+                                    {users.map(user => (
+                                        <option key={user.userId} value={user.userId}>
+                                            {user.fullName} - {user.userId}
+                                        </option>
+                                    ))}
+                                </select>
                             </label>
-                            <label>
-                                Exam ID:
-                                <input
-                                    type="text"
-                                    name="examId"
-                                    value={formData.examId}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </label>
+                            
+                        
                             <label>
                                 Proctoring ID:
-                                <input
-                                    type="text"
+                                <select
                                     name="proctoringID"
                                     value={formData.proctoringID}
                                     onChange={handleChange}
                                     required
-                                />
+                                >
+                                    <option value="">Chọn một lịch giám thị</option>
+                                    {proctoring.map(schedule => (
+                                        <option key={schedule.scheduleId} value={schedule.scheduleId}>
+                                            {schedule.proctorType} - {schedule.scheduleId}
+                                        </option>
+                                    ))}
+                                </select>
                             </label>
                             <label>
                                 Status:
@@ -278,28 +292,33 @@ const RegistrationForm = () => {
                 <div className="popup">
                     <div className="popup-content">
                         <div className="error-popup">
-                            <p>Failed to create or update Registration.</p>
+                            <p>Failed to {formData.formId ? 'update' : 'create'} Registration form. Please try again.</p>
                             <button onClick={closeErrorModal}>Close</button>
                         </div>
                     </div>
                 </div>
             )}
 
-            <div>
-                <label>Filter by status: </label>
-                <select onChange={handleStatusFilterChange} value={statusFilter}>
-                    <option value="All">All</option>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                </select>
+            {/* Registration Table */}
+            <div className="filter">
+                <label>
+                    Status Filter:
+                    <select value={statusFilter} onChange={handleStatusFilterChange}>
+                        <option value="All">All</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </label>
             </div>
 
-            <table className="registrations-table">
+            <table>
                 <thead>
                     <tr>
                         <th>Form ID</th>
                         <th>User ID</th>
-                        <th>CreateDate</th>
+                        <th>Slot IDs</th>
+                        <th>Exam ID</th>
+                        <th>Proctoring ID</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -309,15 +328,16 @@ const RegistrationForm = () => {
                         <tr key={registration.formId}>
                             <td>{registration.formId}</td>
                             <td>{registration.userId}</td>
-                            <td>{registration.createDate}</td>
+                            <td>{registration.proctoringID}</td>
                             <td>{registration.status ? 'Active' : 'Inactive'}</td>
                             <td>
-                                <button onClick={() => handleEdit(registration)} className="edit-btn">Edit</button>
-                                <button onClick={() => handleDelete(registration.formId)} className="delete-btn">Delete</button>
+                                <button onClick={() => handleEdit(registration)}>Edit</button>
+                                <button onClick={() => handleDelete(registration.formId)}>Delete</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
+
             </table>
         </div>
     );
