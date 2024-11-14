@@ -99,35 +99,46 @@ const Slots = () => {
             ? `https://examproctoringmanagement.azurewebsites.net/api/Slot`
             : 'https://examproctoringmanagement.azurewebsites.net/api/Slot';
         const method = isEditMode ? 'PUT' : 'POST';
-
+    
         const updatedDetails = {
             ...slotDetails,
             status: slotDetails.status === 'true' ? true : false,
         };
-
+    
         try {
             const response = await fetch(url, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedDetails),
             });
+    
             if (!response.ok) throw new Error('Failed to save slot');
-
-            const data = await response.json();
-
-            if (isEditMode) {
-                setSlots(slots.map((slot) =>
-                    slot.slotId === slotIdToEdit ? data : slot
-                ));
+    
+            const contentType = response.headers.get("Content-Type");
+    
+            // Check if the response is JSON
+            if (contentType && contentType.includes("application/json")) {
+                const data = await response.json();
+                if (isEditMode) {
+                    setSlots(slots.map((slot) =>
+                        slot.slotId === slotIdToEdit ? data : slot
+                    ));
+                } else {
+                    setSlots([...slots, data]);
+                }
             } else {
-                setSlots([...slots, data]);
+                // Handle plain text response
+                const message = await response.text();
+                console.log(message); // This could be your success message
+                fetchSlots(); // Refresh the list of slots
             }
-            fetchSlots(); // Refresh the list of slots
+    
             setIsModalOpen(false);
         } catch (error) {
             setError(error.message);
         }
     };
+    
 
     const handleEdit = (slotId) => {
         const slot = slots.find((s) => s.slotId === slotId);
@@ -203,17 +214,6 @@ const Slots = () => {
                                     onChange={handleInputChange}
                                     required
                                 />
-                            </label>
-                            <label>
-                                Status:
-                                <select
-                                    name="status"
-                                    value={slotDetails.status}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value={true}>Active</option>
-                                    <option value={false}>Inactive</option>
-                                </select>
                             </label>
                             <label>
                                 Exam:

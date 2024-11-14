@@ -3,6 +3,7 @@ import './Subjects.css';
 
 const Subjects = () => {
     const [subjects, setSubjects] = useState([]);
+    const [exams, setExams] = useState([]); // Store exams data
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showCreateForm, setShowCreateForm] = useState(false);
@@ -15,6 +16,7 @@ const Subjects = () => {
 
     useEffect(() => {
         fetchSubjects();
+        fetchExams(); // Fetch exams on initial load
     }, []);
 
     const fetchSubjects = () => {
@@ -27,6 +29,18 @@ const Subjects = () => {
             .catch((err) => {
                 setError(err);
                 setLoading(false);
+            });
+    };
+
+    const fetchExams = () => {
+        fetch('https://examproctoringmanagement.azurewebsites.net/api/Exam/all')
+            .then((response) => response.json())
+            .then((data) => {
+                setExams(data); // Store exams in the state
+            })
+            .catch((err) => {
+                console.error('Error fetching exams:', err);
+                setError(err);
             });
     };
 
@@ -80,7 +94,6 @@ const Subjects = () => {
             alert('Failed to update subject.');
         }
     };
-    
 
     if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">Error fetching data</div>;
@@ -115,20 +128,28 @@ const Subjects = () => {
                                 onChange={handleChange}
                                 required
                             />
-                            <input
-                                type="text"
+                            <select
                                 name="examId"
-                                placeholder="Exam ID"
                                 value={formData.examId}
                                 onChange={handleChange}
                                 required
-                            />
+                            >
+                                <option value="">Select Exam</option>
+                                {exams.map((exam) => (
+                                    <option key={exam.examId} value={exam.examId}>
+                                        {exam.examName} - {exam.semesterId}
+                                    </option>
+                                ))}
+                            </select>
                             <button type="submit">{isEditing ? 'Update Subject' : 'Create Subject'}</button>
                             {/* Cancel Button */}
-                            <button type="button" onClick={() => {
-                                setShowCreateForm(false);
-                                setFormData({ subjectId: '', subjectName: '', examId: '' }); // Reset form
-                            }}>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setShowCreateForm(false);
+                                    setFormData({ subjectId: '', subjectName: '', examId: '' }); // Reset form
+                                }}
+                            >
                                 Cancel
                             </button>
                         </form>

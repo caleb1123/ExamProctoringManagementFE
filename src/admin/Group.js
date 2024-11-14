@@ -93,6 +93,8 @@ const Group = () => {
   return (
     <div className="subjects-container">
       <h2>Group List</h2>
+      <button onClick={() => setShowModal(true)}>Create Room</button>
+
       {groups.length > 0 ? (
         <table className="subjects-table">
           <thead>
@@ -112,7 +114,6 @@ const Group = () => {
         <div className="no-subjects">No groups available</div>
       )}
 
-      <button onClick={() => setShowModal(true)}>Create Room</button>
 
       {showModal && (
         <div className="modal">
