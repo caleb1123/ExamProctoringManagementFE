@@ -1,42 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import './ProtoringSchedule.css';
+import './RegistrationForm.css';
 import axios from 'axios';
 
-const ProtoringSchedule = () => {
-    const [proctorings, setProctorings] = useState([]);
-    const [filteredProctorings, setFilteredProctorings] = useState([]);
+const RegistrationForm = () => {
+    const [registrations, setRegistrations] = useState([]);
+    const [filteredRegistrations, setFilteredRegistrations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [statusFilter, setStatusFilter] = useState('All');
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-    const [showErrorPopup, setShowErrorPopup] = useState(false); // For error handling
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
 
     // Form data state
     const [formData, setFormData] = useState({
-        scheduleId: '',
+        formId: '',
         userId: '',
-        proctorType: '',
-        slotReferenceId: '',
-        count: 0,
-        isFinished: false,
+        formSlotIds: [],
+        slotIds: [],
+        examId: '',
+        proctoringID: '',
         status: true,
     });
 
     // Fetch data from API
     useEffect(() => {
-        const fetchProctoringData = async () => {
+        const fetchRegistrationData = async () => {
             try {
-                const response = await axios.get('https://examproctoringmanagement.azurewebsites.net/api/ProctoringSchedule');
-                setProctorings(response.data);
-                setFilteredProctorings(response.data);
+                const response = await axios.get('https://examproctoringmanagement.azurewebsites.net/api/RegistrationForm');
+                setRegistrations(response.data);
+                setFilteredRegistrations(response.data);
                 setLoading(false);
             } catch (err) {
                 setError('Error fetching data');
                 setLoading(false);
             }
         };
-        fetchProctoringData();
+        fetchRegistrationData();
     }, []);
 
     // Handle filter change
@@ -44,12 +44,12 @@ const ProtoringSchedule = () => {
         const selectedStatus = event.target.value;
         setStatusFilter(selectedStatus);
         if (selectedStatus === 'All') {
-            setFilteredProctorings(proctorings);
+            setFilteredRegistrations(registrations);
         } else {
-            const filtered = proctorings.filter(proctoring =>
-                selectedStatus === 'Active' ? proctoring.status === true : proctoring.status === false
+            const filtered = registrations.filter(registration =>
+                selectedStatus === 'Active' ? registration.status === true : registration.status === false
             );
-            setFilteredProctorings(filtered);
+            setFilteredRegistrations(filtered);
         }
     };
 
@@ -62,51 +62,117 @@ const ProtoringSchedule = () => {
         }));
     };
 
-    // Handle form submission to create a new schedule
+    // Handle form submission to create or update a registration
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const formattedData = {
             ...formData,
-            count: parseInt(formData.count, 10),
             status: formData.status === 'true' || formData.status === true,
-            isFinished: formData.isFinished === 'true' || formData.isFinished === true,
         };
 
         try {
-            const response = await axios.post(
-                'https://examproctoringmanagement.azurewebsites.net/api/ProctoringSchedule',
-                formattedData,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-
+            let response;
+            if (formData.formId) {
+                // Update existing registration (using PUT and the new /update endpoint)
+                response = await axios.put(
+                    'https://examproctoringmanagement.azurewebsites.net/api/RegistrationForm/update',
+                    formattedData,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+            } else {
+                // Create new registration (using POST)
+                response = await axios.post(
+                    'https://examproctoringmanagement.azurewebsites.net/api/RegistrationForm/create',
+                    formattedData,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+            }
+            
             // Show success message
             setShowSuccessPopup(true);
 
-            // Add the new proctoring to the list
-            setProctorings(prevState => [...prevState, response.data]);
-            setFilteredProctorings(prevState => [...prevState, response.data]);
+            // Add or update the registration in the list
+            if (formData.formId) {
+                setRegistrations(prevState => prevState.map(item =>
+                    item.formId === formData.formId ? response.data : item
+                ));
+                setFilteredRegistrations(prevState => prevState.map(item =>
+                    item.formId === formData.formId ? response.data : item
+                ));
+            } else {
+                setRegistrations(prevState => [...prevState, response.data]);
+                setFilteredRegistrations(prevState => [...prevState, response.data]);
+            }
 
             // Reset form data
             setFormData({
-                scheduleId: '',
+                formId: '',
                 userId: '',
-                proctorType: '',
-                slotReferenceId: '',
-                count: 0,
-                isFinished: false,
+                formSlotIds: [],
+                slotIds: [],
+                examId: '',
+                proctoringID: '',
                 status: true,
             });
 
             setShowCreateForm(false);
         } catch (err) {
-            setError('Failed to create Proctoring.');
-            setShowErrorPopup(true); // Show error popup
+            setError('Failed to create or update Registration.');
+            setShowErrorPopup(true);
         }
+    };
+
+    const handleDelete = async (formId) => {
+        // Confirm the deletion action
+        if (window.confirm("Are you sure you want to delete this registration?")) {
+            try {
+                // Sending the DELETE request to the API with the provided formId
+                const response = await axios.delete(
+                    `https://examproctoringmanagement.azurewebsites.net/api/RegistrationForm/${formId}`
+                );
+    
+                // Check if the deletion was successful based on the response
+                if (response.status === 200) {
+                    // Remove the deleted registration from the state
+                    setRegistrations((prevState) =>
+                        prevState.filter((registration) => registration.formId !== formId)
+                    );
+                    setFilteredRegistrations((prevState) =>
+                        prevState.filter((registration) => registration.formId !== formId)
+                    );
+    
+                    // Optional: Show a success alert or popup
+                    alert("Registration deleted successfully!");
+                }
+            } catch (err) {
+                // Handle any errors that occur during the deletion
+                console.error("Error deleting registration:", err);
+                alert("Failed to delete the registration. Please try again.");
+            }
+        }
+    };
+
+    // Handle editing a registration
+    const handleEdit = (registration) => {
+        setFormData({
+            formId: registration.formId,
+            userId: registration.userId,
+            formSlotIds: registration.formSlots.map(slot => slot.slotId),
+            slotIds: registration.slotIds,
+            examId: registration.examId,
+            proctoringID: registration.proctoringID,
+            status: registration.status,
+        });
+        setShowCreateForm(true);
     };
 
     // Close success popup
@@ -119,27 +185,28 @@ const ProtoringSchedule = () => {
     if (error) return <div className="error">{error}</div>;
 
     return (
-        <div className="proctorings-container">
-            <h2>Proctoring Schedule List</h2>
+        <div className="registrations-container">
+            <h2>Registration Form List</h2>
 
-            <button onClick={() => setShowCreateForm(true)} className="create-exam-btn">
-                Create Exam
+            <button onClick={() => setShowCreateForm(true)} className="create-registration-btn">
+                Create Registration
             </button>
 
             {showCreateForm && (
                 <div className="popup">
                     <div className="popup-content">
-                        <h3>Create Exam</h3>
+                        <h3>{formData.formId ? 'Edit Registration' : 'Create Registration'}</h3>
                         <form onSubmit={handleSubmit}>
                             {/* Form Fields */}
                             <label>
-                                Schedule ID:
+                                Form ID:
                                 <input
                                     type="text"
-                                    name="scheduleId"
-                                    value={formData.scheduleId}
+                                    name="formId"
+                                    value={formData.formId}
                                     onChange={handleChange}
                                     required
+                                    disabled={formData.formId !== ''}  // Disable if formId is set (edit mode)
                                 />
                             </label>
                             <label>
@@ -153,42 +220,23 @@ const ProtoringSchedule = () => {
                                 />
                             </label>
                             <label>
-                                Proctor Type:
+                                Exam ID:
                                 <input
                                     type="text"
-                                    name="proctorType"
-                                    value={formData.proctorType}
+                                    name="examId"
+                                    value={formData.examId}
                                     onChange={handleChange}
                                     required
                                 />
                             </label>
                             <label>
-                                Slot Reference ID:
+                                Proctoring ID:
                                 <input
                                     type="text"
-                                    name="slotReferenceId"
-                                    value={formData.slotReferenceId}
+                                    name="proctoringID"
+                                    value={formData.proctoringID}
                                     onChange={handleChange}
                                     required
-                                />
-                            </label>
-                            <label>
-                                Count:
-                                <input
-                                    type="number"
-                                    name="count"
-                                    value={formData.count}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </label>
-                            <label>
-                                Is Finished:
-                                <input
-                                    type="checkbox"
-                                    name="isFinished"
-                                    checked={formData.isFinished}
-                                    onChange={() => setFormData(prevData => ({ ...prevData, isFinished: !prevData.isFinished }))}
                                 />
                             </label>
                             <label>
@@ -199,12 +247,12 @@ const ProtoringSchedule = () => {
                                     onChange={handleChange}
                                     required
                                 >
-                                    <option value="true">Active</option>
-                                    <option value="false">Inactive</option>
+                                    <option value={true}>Active</option>
+                                    <option value={false}>Inactive</option>
                                 </select>
                             </label>
 
-                            <button type="submit" className="create-btn">Create Exam</button>
+                            <button type="submit" className="create-btn">{formData.formId ? 'Update Registration' : 'Create Registration'}</button>
                             <button type="button" onClick={() => setShowCreateForm(false)} className="cancel-btn">
                                 Cancel
                             </button>
@@ -218,7 +266,7 @@ const ProtoringSchedule = () => {
                 <div className="popup">
                     <div className="popup-content">
                         <div className="success-popup">
-                            <p>Proctoring exam created successfully!</p>
+                            <p>Registration form {formData.formId ? 'updated' : 'created'} successfully!</p>
                             <button onClick={closeSuccessModal}>Close</button>
                         </div>
                     </div>
@@ -229,8 +277,8 @@ const ProtoringSchedule = () => {
             {showErrorPopup && (
                 <div className="popup">
                     <div className="popup-content">
-                        <div className="success-popup" style={{ backgroundColor: '#e74c3c' }}>
-                            <p>Failed to create Proctoring.</p>
+                        <div className="error-popup">
+                            <p>Failed to create or update Registration.</p>
                             <button onClick={closeErrorModal}>Close</button>
                         </div>
                     </div>
@@ -246,28 +294,27 @@ const ProtoringSchedule = () => {
                 </select>
             </div>
 
-            <table className="proctorings-table">
+            <table className="registrations-table">
                 <thead>
                     <tr>
-                        <th>Schedule ID</th>
+                        <th>Form ID</th>
                         <th>User ID</th>
-                        <th>Proctor Type</th>
-                        <th>Slot Reference ID</th>
-                        <th>Count</th>
+                        <th>CreateDate</th>
                         <th>Status</th>
-                        <th>Is Finished</th> {/* New column */}
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredProctorings.map((proctoring) => (
-                        <tr key={proctoring.scheduleId}>
-                            <td>{proctoring.scheduleId}</td>
-                            <td>{proctoring.userId}</td>
-                            <td>{proctoring.proctorType}</td>
-                            <td>{proctoring.slotReferenceId}</td>
-                            <td>{proctoring.count}</td>
-                            <td>{proctoring.status ? 'Active' : 'Inactive'}</td>
-                            <td>{proctoring.isFinished ? 'Yes' : 'No'}</td> {/* Display Yes/No */}
+                    {filteredRegistrations.map((registration) => (
+                        <tr key={registration.formId}>
+                            <td>{registration.formId}</td>
+                            <td>{registration.userId}</td>
+                            <td>{registration.createDate}</td>
+                            <td>{registration.status ? 'Active' : 'Inactive'}</td>
+                            <td>
+                                <button onClick={() => handleEdit(registration)} className="edit-btn">Edit</button>
+                                <button onClick={() => handleDelete(registration.formId)} className="delete-btn">Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -276,4 +323,4 @@ const ProtoringSchedule = () => {
     );
 };
 
-export default ProtoringSchedule;
+export default RegistrationForm;
