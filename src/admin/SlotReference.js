@@ -6,6 +6,7 @@ const SlotReference = () => {
     const [slots, setSlots] = useState([]);
     const [filterType, setFilterType] = useState("all");
     const [modalVisible, setModalVisible] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);  // New state to track edit mode
     const [formData, setFormData] = useState({
         slotReferenceId: '',
         slotId: '',
@@ -41,11 +42,11 @@ const SlotReference = () => {
             const data = {
                 slotReferenceId,
                 slotId,
-                roomId: roomId || null,  // Set to null if empty
-                groupId: groupId || null  // Set to null if empty
+                roomId: roomId || null,
+                groupId: groupId || null
             };
 
-            if (slotReferenceId) {
+            if (isEditing) {
                 await axios.put('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', data);
             } else {
                 await axios.post('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', data);
@@ -53,6 +54,7 @@ const SlotReference = () => {
 
             setModalVisible(false);
             setFormData({ slotReferenceId: '', slotId: '', roomId: '', groupId: '' });
+            setIsEditing(false);
 
             axios.get('https://examproctoringmanagement.azurewebsites.net/api/SlotReference')
                 .then(response => setSlots(response.data))
@@ -64,6 +66,13 @@ const SlotReference = () => {
 
     const handleEdit = (slot) => {
         setFormData({ ...slot });
+        setIsEditing(true); // Set edit mode
+        setModalVisible(true);
+    };
+
+    const handleCreate = () => {
+        setFormData({ slotReferenceId: '', slotId: '', roomId: '', groupId: '' });
+        setIsEditing(false); // Set create mode
         setModalVisible(true);
     };
 
@@ -94,7 +103,7 @@ const SlotReference = () => {
                 </select>
             </div>
 
-            <button onClick={() => setModalVisible(true)}>Create Slot Reference</button>
+            <button onClick={handleCreate}>Create Slot Reference</button>
 
             <table className="slot-table">
                 <thead>
@@ -124,7 +133,7 @@ const SlotReference = () => {
             {modalVisible && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>{formData.slotReferenceId ? 'Edit Slot Reference' : 'Create Slot Reference'}</h3>
+                        <h3>{isEditing ? 'Edit Slot Reference' : 'Create Slot Reference'}</h3>
                         <form onSubmit={handleCreateEditSubmit}>
                             <input
                                 type="text"
@@ -165,7 +174,7 @@ const SlotReference = () => {
                                     <option key={group.groupId} value={group.groupId}>{group.groupId}</option>
                                 ))}
                             </select>
-                            <button type="submit">{formData.slotReferenceId ? 'Update' : 'Create'}</button>
+                            <button type="submit">{isEditing ? 'Update' : 'Create'}</button>
                             <button type="button" onClick={() => setModalVisible(false)}>Cancel</button>
                         </form>
                     </div>
