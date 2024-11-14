@@ -148,7 +148,7 @@ const Semesters = () => {
             {isModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>{isEditMode ? 'Edit Semester' : 'Create New Semester'}</h3>
+                        <h3>{isEditMode ? 'Create Semester' : 'Create New Semester'}</h3>
                         <form onSubmit={handleSubmit}>
                             <label>
                                 Semester ID:

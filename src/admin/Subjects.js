@@ -12,8 +12,12 @@ const Subjects = () => {
         subjectName: '',
         examId: ''
     });
-    
+
     useEffect(() => {
+        fetchSubjects();
+    }, []);
+
+    const fetchSubjects = () => {
         fetch('https://examproctoringmanagement.azurewebsites.net/api/Subject')
             .then((response) => response.json())
             .then((data) => {
@@ -24,7 +28,7 @@ const Subjects = () => {
                 setError(err);
                 setLoading(false);
             });
-    }, []);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,8 +47,7 @@ const Subjects = () => {
             });
             setShowCreateForm(false);
             alert('Subject created successfully!');
-            // Fetch the subjects again after creation
-            fetchSubjects();
+            fetchSubjects(); // Refetch subjects after create
         } catch (error) {
             console.error('Error creating subject:', error);
             alert('Failed to create subject.');
@@ -59,30 +62,25 @@ const Subjects = () => {
 
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
+        const { exam, slotRoomSubjects, ...updatedData } = formData; // Destructure and remove the unwanted properties
         try {
             await fetch('https://examproctoringmanagement.azurewebsites.net/api/Subject', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(updatedData),
             });
             setIsEditing(false);
             setShowCreateForm(false);
             alert('Subject updated successfully!');
-            fetchSubjects();
+            fetchSubjects(); // Refetch subjects after update
         } catch (error) {
             console.error('Error updating subject:', error);
             alert('Failed to update subject.');
         }
     };
-
-    const fetchSubjects = () => {
-        fetch('https://examproctoringmanagement.azurewebsites.net/api/Subject')
-            .then((response) => response.json())
-            .then((data) => setSubjects(data))
-            .catch((error) => console.error('Error fetching subjects:', error));
-    };
+    
 
     if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">Error fetching data</div>;
@@ -97,47 +95,46 @@ const Subjects = () => {
 
             {/* Modal for Create/Update Subject */}
             {showCreateForm && (
-    <div className="modal">
-        <div className="modal-content">
-            <h3>{isEditing ? 'Edit Subject' : 'Create Subject'}</h3>
-            <form onSubmit={isEditing ? handleUpdateSubmit : handleCreateSubmit}>
-                <input 
-                    type="text" 
-                    name="subjectId" 
-                    placeholder="Subject ID" 
-                    value={formData.subjectId} 
-                    onChange={handleChange} 
-                    required 
-                />
-                <input 
-                    type="text" 
-                    name="subjectName" 
-                    placeholder="Subject Name" 
-                    value={formData.subjectName} 
-                    onChange={handleChange} 
-                    required 
-                />
-                <input 
-                    type="text" 
-                    name="examId" 
-                    placeholder="Exam ID" 
-                    value={formData.examId} 
-                    onChange={handleChange} 
-                    required 
-                />
-                <button type="submit">{isEditing ? 'Update Subject' : 'Create Subject'}</button>
-                {/* Cancel Button */}
-                <button type="button" onClick={() => {
-                    setShowCreateForm(false);
-                    setFormData({ subjectId: '', subjectName: '', examId: '' }); // Reset form
-                }}>
-                    Cancel
-                </button>
-            </form>
-        </div>
-    </div>
-)}
-
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>{isEditing ? 'Edit Subject' : 'Create Subject'}</h3>
+                        <form onSubmit={isEditing ? handleUpdateSubmit : handleCreateSubmit}>
+                            <input
+                                type="text"
+                                name="subjectId"
+                                placeholder="Subject ID"
+                                value={formData.subjectId}
+                                onChange={handleChange}
+                                required
+                            />
+                            <input
+                                type="text"
+                                name="subjectName"
+                                placeholder="Subject Name"
+                                value={formData.subjectName}
+                                onChange={handleChange}
+                                required
+                            />
+                            <input
+                                type="text"
+                                name="examId"
+                                placeholder="Exam ID"
+                                value={formData.examId}
+                                onChange={handleChange}
+                                required
+                            />
+                            <button type="submit">{isEditing ? 'Update Subject' : 'Create Subject'}</button>
+                            {/* Cancel Button */}
+                            <button type="button" onClick={() => {
+                                setShowCreateForm(false);
+                                setFormData({ subjectId: '', subjectName: '', examId: '' }); // Reset form
+                            }}>
+                                Cancel
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             {/* Subjects Table */}
             <table className="subjects-table">

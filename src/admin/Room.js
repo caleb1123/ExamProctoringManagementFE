@@ -10,17 +10,21 @@ const Room = () => {
     const [showModal, setShowModal] = useState(false);  // To toggle the modal visibility
 
     useEffect(() => {
+        fetchRooms();
+    }, []);
+
+    const fetchRooms = () => {
         fetch('https://examproctoringmanagement.azurewebsites.net/api/Room')
             .then((response) => response.json())
             .then((data) => {
-                setRooms(data);  
-                setLoading(false);  
+                setRooms(data);
+                setLoading(false);
             })
             .catch((err) => {
-                setError('Error fetching rooms data');  
-                setLoading(false);  
+                setError('Error fetching rooms data');
+                setLoading(false);
             });
-    }, []);
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -41,25 +45,38 @@ const Room = () => {
                 setRooms([...rooms, newRoom]);
                 setRoomData({ roomId: '', roomName: '' });
                 setShowModal(false);  // Close modal after creating
+                fetchRooms();  // Fetch updated rooms data
             })
             .catch((err) => console.error('Error creating room:', err));
     };
 
-    const handleEdit = () => {
-        fetch(`https://examproctoringmanagement.azurewebsites.net/api/Room/${roomData.roomId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(roomData),
-        })
-            .then((response) => response.json())
-            .then((updatedRoom) => {
-                setRooms(rooms.map((room) => (room.roomId === updatedRoom.roomId ? updatedRoom : room)));
-                setRoomData({ roomId: '', roomName: '' });
-                setIsEditing(false);
-                setShowModal(false);  // Close modal after update
-            })
-            .catch((err) => console.error('Error updating room:', err));
+    const handleEdit = async () => {
+        // First, hide the modal
+        setShowModal(false);
+    
+        // Then make the API call
+        try {
+            const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Room', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(roomData),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to update room data');
+            }
+    
+            // If the request is successful, clear the form and exit edit mode
+            setRoomData({ roomId: '', roomName: '' });
+            setIsEditing(false);
+            const response1 = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Room');
+            setRooms(await response1.json());
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
+    
+    
 
     const handleEditButtonClick = (room) => {
         setRoomData({ roomId: room.roomId, roomName: room.roomName });
