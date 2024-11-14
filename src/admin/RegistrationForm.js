@@ -193,7 +193,7 @@ const RegistrationForm = () => {
                                 
                                 handleSubmit(e,registration.formId);
                             }
-                                }>Edit</button>
+                                }>Approve</button>
                             </td>
                         </tr>
                     ))}

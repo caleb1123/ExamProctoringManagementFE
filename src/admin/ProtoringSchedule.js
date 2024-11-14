@@ -132,52 +132,104 @@ const ProctoringSchedule = () => {
             </button>
 
             {/* Modal for Create/Edit Schedule */}
-            {(showCreateForm || isEditing) && (
-                <div className="popup">
-                    <div className="popup-content">
-                        <h3>{isEditing ? 'Edit Schedule' : 'Create Schedule'}</h3>
-                        <form onSubmit={isEditing ? handleUpdate : handleSubmit}>
-                            <input type="text" name="scheduleId" placeholder="Schedule ID" value={formData.scheduleId} onChange={handleChange} required />
-                            <input type="text" name="userId" placeholder="User ID" value={formData.userId} onChange={handleChange} required />
-                            <input type="text" name="proctorType" placeholder="Proctor Type" value={formData.proctorType} onChange={handleChange} required />
-                            <input type="text" name="slotReferenceId" placeholder="Slot Reference ID" value={formData.slotReferenceId} onChange={handleChange} required />
-                            <label>Status:
-                                <select name="status" value={formData.status} onChange={handleChange} required>
-                                    <option value="true">Active</option>
-                                    <option value="false">Inactive</option>
-                                </select>
-                            </label>
-                            <label>Is Finished:
-                                <select name="isFinished" value={formData.isFinished} onChange={handleChange} required>
-                                    <option value={true}>Yes</option>
-                                    <option value={false}>No</option>
-                                </select>
-                            </label>
-                            <input type="number" name="count" placeholder="Count" value={formData.count} onChange={handleChange} required />
-                            <button type="submit" className="create-btn">{isEditing ? 'Update Schedule' : 'Create Schedule'}</button>
-                            <button
-                                type="button"
-                                className="cancel-btn"
-                                onClick={() => {
-                                    setIsEditing(false);
-                                    setShowCreateForm(false);
-                                    setFormData({
-                                        scheduleId: '',
-                                        userId: '',
-                                        proctorType: '',
-                                        slotReferenceId: '',
-                                        status: true,
-                                        isFinished: false,
-                                        count: 0
-                                    });
-                                }}
-                            >
-                                Cancel
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            )}
+           {/* Modal for Create/Edit Schedule */}
+{(showCreateForm || isEditing) && (
+    <div className="popup">
+        <div className="popup-content">
+            <h3>{isEditing ? 'Edit Schedule' : 'Create Schedule'}</h3>
+            <form onSubmit={isEditing ? handleUpdate : handleSubmit}>
+                {/* Conditionally render fields for create or edit */}
+                {isEditing && (
+                    <>
+                        <input
+                            type="text"
+                            name="scheduleId"
+                            placeholder="Schedule ID"
+                            value={formData.scheduleId}
+                            onChange={handleChange}
+                            required
+                        />
+                        <input
+                            type="text"
+                            name="userId"
+                            placeholder="User ID"
+                            value={formData.userId}
+                            onChange={handleChange}
+                            required
+                        />
+                    </>
+                )}
+                {/* Common fields for both create and edit */}
+                <input
+                    type="text"
+                    name="proctorType"
+                    placeholder="Proctor Type"
+                    value={formData.proctorType}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="slotReferenceId"
+                    placeholder="Slot Reference ID"
+                    value={formData.slotReferenceId}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="number"
+                    name="count"
+                    placeholder="Count"
+                    value={formData.count}
+                    onChange={handleChange}
+                    required
+                />
+                {/* Render status and isFinished fields only for editing */}
+                {isEditing && (
+                    <>
+                        <label>
+                            Status:
+                            <select name="status" value={formData.status} onChange={handleChange} required>
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </label>
+                        <label>
+                            Is Finished:
+                            <select name="isFinished" value={formData.isFinished} onChange={handleChange} required>
+                                <option value={true}>Yes</option>
+                                <option value={false}>No</option>
+                            </select>
+                        </label>
+                    </>
+                )}
+                <button type="submit" className="create-btn">
+                    {isEditing ? 'Update Schedule' : 'Create Schedule'}
+                </button>
+                <button
+                    type="button"
+                    className="cancel-btn"
+                    onClick={() => {
+                        setIsEditing(false);
+                        setShowCreateForm(false);
+                        setFormData({
+                            scheduleId: '',
+                            userId: '',
+                            proctorType: '',
+                            slotReferenceId: '',
+                            status: true,
+                            isFinished: false,
+                            count: 0
+                        });
+                    }}
+                >
+                    Cancel
+                </button>
+            </form>
+        </div>
+    </div>
+)}
+
 
             <div className="filter-container">
                 <label htmlFor="status-filter">Filter by Status:</label>

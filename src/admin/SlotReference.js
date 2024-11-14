@@ -6,6 +6,7 @@ const SlotReference = () => {
     const [slots, setSlots] = useState([]);
     const [filterType, setFilterType] = useState("all");
     const [modalVisible, setModalVisible] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);  // New state to track edit mode
     const [formData, setFormData] = useState({
         slotReferenceId: '',
         slotId: '',
@@ -17,7 +18,6 @@ const SlotReference = () => {
     const [slotsList, setSlotsList] = useState([]);
 
     useEffect(() => {
-        // Fetch the list of slots, rooms, and groups
         axios.get('https://examproctoringmanagement.azurewebsites.net/api/SlotReference')
             .then(response => setSlots(response.data))
             .catch(error => console.error('Error fetching slots:', error));
@@ -39,20 +39,26 @@ const SlotReference = () => {
         e.preventDefault();
         const { slotReferenceId, slotId, roomId, groupId } = formData;
         try {
-            if (slotReferenceId) {
-                // Update request
-                await axios.put('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', formData);
+            const data = {
+                slotReferenceId,
+                slotId,
+                roomId: roomId || null,
+                groupId: groupId || null
+            };
+
+            if (isEditing) {
+                await axios.put('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', data);
             } else {
-                // Create request
-                await axios.post('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', formData);
+                await axios.post('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', data);
             }
+
             setModalVisible(false);
             setFormData({ slotReferenceId: '', slotId: '', roomId: '', groupId: '' });
-            // Reload slots
+            setIsEditing(false);
+
             axios.get('https://examproctoringmanagement.azurewebsites.net/api/SlotReference')
                 .then(response => setSlots(response.data))
                 .catch(error => console.error('Error fetching slots:', error));
-
         } catch (error) {
             console.error('Error saving slot reference:', error);
         }
@@ -60,6 +66,13 @@ const SlotReference = () => {
 
     const handleEdit = (slot) => {
         setFormData({ ...slot });
+        setIsEditing(true); // Set edit mode
+        setModalVisible(true);
+    };
+
+    const handleCreate = () => {
+        setFormData({ slotReferenceId: '', slotId: '', roomId: '', groupId: '' });
+        setIsEditing(false); // Set create mode
         setModalVisible(true);
     };
 
@@ -90,7 +103,7 @@ const SlotReference = () => {
                 </select>
             </div>
 
-            <button onClick={() => setModalVisible(true)}>Create Slot Reference</button>
+            <button onClick={handleCreate}>Create Slot Reference</button>
 
             <table className="slot-table">
                 <thead>
@@ -120,7 +133,7 @@ const SlotReference = () => {
             {modalVisible && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>{formData.slotReferenceId ? 'Edit Slot Reference' : 'Create Slot Reference'}</h3>
+                        <h3>{isEditing ? 'Edit Slot Reference' : 'Create Slot Reference'}</h3>
                         <form onSubmit={handleCreateEditSubmit}>
                             <input
                                 type="text"
@@ -145,7 +158,6 @@ const SlotReference = () => {
                                 name="roomId"
                                 value={formData.roomId}
                                 onChange={(e) => setFormData({ ...formData, roomId: e.target.value })}
-                                required
                             >
                                 <option value="">Select Room ID</option>
                                 {rooms.map(room => (
@@ -156,14 +168,13 @@ const SlotReference = () => {
                                 name="groupId"
                                 value={formData.groupId}
                                 onChange={(e) => setFormData({ ...formData, groupId: e.target.value })}
-                                required
                             >
                                 <option value="">Select Group ID</option>
                                 {groups.map(group => (
                                     <option key={group.groupId} value={group.groupId}>{group.groupId}</option>
                                 ))}
                             </select>
-                            <button type="submit">{formData.slotReferenceId ? 'Update' : 'Create'}</button>
+                            <button type="submit">{isEditing ? 'Update' : 'Create'}</button>
                             <button type="button" onClick={() => setModalVisible(false)}>Cancel</button>
                         </form>
                     </div>
