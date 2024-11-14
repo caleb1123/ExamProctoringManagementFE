@@ -12,11 +12,11 @@ const Slots = () => {
     const [slotIdToEdit, setSlotIdToEdit] = useState(null);
     const [slotDetails, setSlotDetails] = useState({
         slotId: '',
-        slotName: '',
-        fromTime: '',
-        toTime: '',
+        date: '',
+        start: '05:00:00', // Default start time in hh:mm:ss format
+        end: '00:00:00',   // Default end time in hh:mm:ss format
         status: true,
-        examId: '' // Added examId
+        examId: ''
     });
     const [exams, setExams] = useState([]); // Store the exams data
 
@@ -69,23 +69,21 @@ const Slots = () => {
         setIsEditMode(false);
         setSlotDetails({
             slotId: '',
-            slotName: '',
-            fromTime: '',
-            toTime: '',
+            date: '',
+            start: '05:00:00', // Reset start time
+            end: '00:00:00',   // Reset end time
             status: true,
-            examId: '' // Reset examId
+            examId: ''
         });
     };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed, so add 1
-        const day = String(date.getDate()).padStart(2, '0'); // Pad single digits with zero
-
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`; // Returns in YYYY-MM-DD format
     };
-
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -98,8 +96,8 @@ const Slots = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const url = isEditMode
-            ? `https://your-api-url/api/Slot/update`
-            : 'https://your-api-url/api/Slot/create';
+            ? `https://examproctoringmanagement.azurewebsites.net/api/Slot`
+            : 'https://examproctoringmanagement.azurewebsites.net/api/Slot';
         const method = isEditMode ? 'PUT' : 'POST';
 
         const updatedDetails = {

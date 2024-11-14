@@ -17,7 +17,6 @@ const SlotReference = () => {
     const [slotsList, setSlotsList] = useState([]);
 
     useEffect(() => {
-        // Fetch the list of slots, rooms, and groups
         axios.get('https://examproctoringmanagement.azurewebsites.net/api/SlotReference')
             .then(response => setSlots(response.data))
             .catch(error => console.error('Error fetching slots:', error));
@@ -39,20 +38,25 @@ const SlotReference = () => {
         e.preventDefault();
         const { slotReferenceId, slotId, roomId, groupId } = formData;
         try {
+            const data = {
+                slotReferenceId,
+                slotId,
+                roomId: roomId || null,  // Set to null if empty
+                groupId: groupId || null  // Set to null if empty
+            };
+
             if (slotReferenceId) {
-                // Update request
-                await axios.put('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', formData);
+                await axios.put('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', data);
             } else {
-                // Create request
-                await axios.post('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', formData);
+                await axios.post('https://examproctoringmanagement.azurewebsites.net/api/SlotReference', data);
             }
+
             setModalVisible(false);
             setFormData({ slotReferenceId: '', slotId: '', roomId: '', groupId: '' });
-            // Reload slots
+
             axios.get('https://examproctoringmanagement.azurewebsites.net/api/SlotReference')
                 .then(response => setSlots(response.data))
                 .catch(error => console.error('Error fetching slots:', error));
-
         } catch (error) {
             console.error('Error saving slot reference:', error);
         }
@@ -145,7 +149,6 @@ const SlotReference = () => {
                                 name="roomId"
                                 value={formData.roomId}
                                 onChange={(e) => setFormData({ ...formData, roomId: e.target.value })}
-                                required
                             >
                                 <option value="">Select Room ID</option>
                                 {rooms.map(room => (
@@ -156,7 +159,6 @@ const SlotReference = () => {
                                 name="groupId"
                                 value={formData.groupId}
                                 onChange={(e) => setFormData({ ...formData, groupId: e.target.value })}
-                                required
                             >
                                 <option value="">Select Group ID</option>
                                 {groups.map(group => (
