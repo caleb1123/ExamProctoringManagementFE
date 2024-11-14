@@ -8,7 +8,8 @@ import Header from './components/header/Header';
 import Account from './AccountSetting/Account';
 import Exam from './components/exam/exam'
 import View from './components/view/View'
-
+import Reschedule from './components/reschedule/reschedule'
+ 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('jwtToken'));
 
@@ -26,6 +27,7 @@ const App = () => {
                 <Route path="/account" element={<Account />} />
                 <Route path="/view" element={<View />} />
                 <Route path="/exam" element={<Exam />} />
+                <Route path="/reschedule" element={<Reschedule />} />
                 <Route path="/admin" element={<PrivateRoute element={<Admin />} />} />
             </Routes>
         </Router>
