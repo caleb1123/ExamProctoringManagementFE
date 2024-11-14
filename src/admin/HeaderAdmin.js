@@ -30,6 +30,12 @@ const HeaderAdmin = ({ activeMenu, handleMenuClick, handleLogout }) => {
                 <li className={activeMenu === 'SlotReference' ? 'active' : ''} onClick={() => handleMenuClick('SlotReference')}>
                     SlotReference
                 </li>
+                <li className={activeMenu === 'ProtoringSchedule' ? 'active' : ''} onClick={() => handleMenuClick('ProtoringSchedule')}>
+                ProtoringSchedule
+                </li>
+                <li className={activeMenu === 'RegistrationForm' ? 'active' : ''} onClick={() => handleMenuClick('RegistrationForm')}>
+                RegistrationForm
+                </li>
                 {/* Dropdown for GroupRoom */}
                 <li className={isGroupRoomOpen ? 'active' : ''} onClick={toggleGroupRoom}>
                     GroupRoom
