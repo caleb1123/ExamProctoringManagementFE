@@ -1,11 +1,11 @@
-.proctorings-container {
+.registrations-container {
     padding: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
 }
 
-/* Proctoring table styling */
-.proctorings-table {
+/* Registrations table styling */
+.registrations-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
@@ -15,8 +15,8 @@
 }
 
 /* Table headers styling */
-.proctorings-table th,
-.proctorings-table td {
+.registrations-table th,
+.registrations-table td {
     padding: 12px;
     text-align: left;
     border: 1px solid #ddd;
@@ -25,7 +25,7 @@
 }
 
 /* Header cells styling */
-.proctorings-table th {
+.registrations-table th {
     background-color: #3498db;
     color: white;
     font-weight: bold;
@@ -33,19 +33,19 @@
 }
 
 /* Alternate row colors */
-.proctorings-table tr:nth-child(even) {
+.registrations-table tr:nth-child(even) {
     background-color: #ecf0f1;
 }
 
 /* Hover effect */
-.proctorings-table tr:hover {
+.registrations-table tr:hover {
     background-color: #f2f7ff;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
 }
 
-/* Create Exam Button */
-.create-exam-btn {
+/* Create Registration Button */
+.create-registration-btn {
     padding: 10px 20px;
     background-color: #28a745; /* Blue */
     color: white;
@@ -55,12 +55,12 @@
     margin-bottom: 20px;
 }
 
-/* Create Exam Button Hover Effect */
-.create-exam-btn:hover {
+/* Create Registration Button Hover Effect */
+.create-registration-btn:hover {
     background-color: #28a745;
 }
 
-/* Popup Modal Styling for Create Exam */
+/* Popup Modal Styling for Create Registration */
 .popup {
     position: fixed;
     top: 0;
@@ -114,7 +114,7 @@
     margin-top: 5px;
 }
 
-/* Create Exam Button inside the popup */
+/* Create Registration Button inside the popup */
 .popup-content button.create-btn {
     padding: 10px 20px;
     background-color: #28a745; /* Blue */
@@ -126,7 +126,7 @@
     text-align: center;
 }
 
-/* Create Exam Button Hover Effect inside the popup */
+/* Create Registration Button Hover Effect inside the popup */
 .popup-content button.create-btn:hover {
     background-color: #28a745;
 }
@@ -169,4 +169,19 @@
 
 .popup-content .success-popup button:hover {
     background-color: #e53935;
+}
+
+.delete-btn {
+    background-color: red;      /* Red background */
+    color: white;               /* White text color */
+    border: none;               /* Remove border */
+    padding: 8px 16px;          /* Add padding */
+    font-size: 14px;            /* Font size */
+    cursor: pointer;           /* Pointer cursor on hover */
+    border-radius: 4px;         /* Optional: rounded corners */
+    transition: background-color 0.3s ease;  /* Smooth background color transition */
+}
+
+.delete-btn:hover {
+    background-color: darkred;  /* Darker red on hover */
 }
