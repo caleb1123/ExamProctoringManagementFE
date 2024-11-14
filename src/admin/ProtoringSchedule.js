@@ -20,6 +20,7 @@ const ProctoringSchedule = () => {
         isFinished: false,
         count: 0
     });
+    const [updateTrigger, setUpdateTrigger] = useState(false); // Trigger for reload
 
     useEffect(() => {
         // Fetch schedules
@@ -33,7 +34,7 @@ const ProctoringSchedule = () => {
                 setError(err);
                 setLoading(false);
             });
-    }, []);
+    }, [updateTrigger]); // Reload data when updateTrigger changes
 
     const handleStatusFilterChange = (event) => {
         const selectedStatus = event.target.value;
@@ -50,7 +51,13 @@ const ProctoringSchedule = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+
+        // Ensure isFinished is treated as a boolean
+        if (name === "isFinished") {
+            setFormData({ ...formData, [name]: value === "true" });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -74,7 +81,7 @@ const ProctoringSchedule = () => {
             proctorType: schedule.proctorType,
             slotReferenceId: schedule.slotReferenceId,
             status: schedule.status,
-            isFinished: schedule.isFinished,
+            isFinished: schedule.isFinished, // Ensure it's boolean
             count: schedule.count
         });
     };
@@ -82,17 +89,35 @@ const ProctoringSchedule = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            await axios.put('https://examproctoringmanagement.azurewebsites.net/api/ProctoringSchedule', formData);
+            await axios.put('https://examproctoringmanagement.azurewebsites.net/api/ProctoringSchedule/update', formData);
             alert('Proctoring Schedule updated successfully!');
             setIsEditing(false);
-            setFilteredSchedules(schedules.map((schedule) =>
+   
+            // Cập nhật dữ liệu trong local state sau khi chỉnh sửa
+            const updatedSchedules = schedules.map((schedule) =>
                 schedule.scheduleId === formData.scheduleId ? { ...schedule, ...formData } : schedule
-            ));
+            );
+            setSchedules(updatedSchedules);
+            setFilteredSchedules(updatedSchedules);
+   
         } catch (error) {
             console.error('Error updating schedule:', error);
             alert('Failed to update schedule.');
         }
     };
+   
+    const getAllSchedules = async () => {
+        try {
+            const response = await axios.get('https://examproctoringmanagement.azurewebsites.net/api/ProctoringSchedule');
+            setSchedules(response.data);
+            setFilteredSchedules(response.data);
+            setLoading(false);
+        } catch (err) {
+            setError(err);
+            setLoading(false);
+        }
+    };
+
 
     if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">Error fetching data</div>;
@@ -124,8 +149,8 @@ const ProctoringSchedule = () => {
                             </label>
                             <label>Is Finished:
                                 <select name="isFinished" value={formData.isFinished} onChange={handleChange} required>
-                                    <option value="false">No</option>
-                                    <option value="true">Yes</option>
+                                    <option value={true}>Yes</option>
+                                    <option value={false}>No</option>
                                 </select>
                             </label>
                             <input type="number" name="count" placeholder="Count" value={formData.count} onChange={handleChange} required />
