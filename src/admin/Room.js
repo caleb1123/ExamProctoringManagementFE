@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import './Room.css';  // Import the CSS file for styling
+import './Room.css';
 
 const Room = () => {
-    const [rooms, setRooms] = useState([]);  // State to store room data
-    const [loading, setLoading] = useState(true);  // Loading state
-    const [error, setError] = useState(null);  // Error state to handle API errors
-    const [roomData, setRoomData] = useState({ roomId: '', roomName: '' });  // For create and edit forms
-    const [isEditing, setIsEditing] = useState(false);  // To toggle between create and edit modes
-    const [showModal, setShowModal] = useState(false);  // To toggle the modal visibility
+    const [rooms, setRooms] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [roomData, setRoomData] = useState({ roomId: '', group: { groupId: '' } });
+    const [isEditing, setIsEditing] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         fetchRooms();
@@ -34,71 +34,49 @@ const Room = () => {
         }));
     };
 
-    const handleCreate = () => {
-        fetch('https://examproctoringmanagement.azurewebsites.net/api/Room', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(roomData),
-        })
-            .then((response) => response.json())
-            .then((newRoom) => {
-                setRooms([...rooms, newRoom]);
-                setRoomData({ roomId: '', roomName: '' });
-                setShowModal(false);  // Close modal after creating
-                fetchRooms();  // Fetch updated rooms data
-            })
-            .catch((err) => console.error('Error creating room:', err));
-    };
-
-    const handleEdit = async () => {
-        // First, hide the modal
-        setShowModal(false);
-    
-        // Then make the API call
-        try {
-            const response = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Room', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(roomData),
-            });
-    
-            if (!response.ok) {
-                throw new Error('Failed to update room data');
-            }
-    
-            // If the request is successful, clear the form and exit edit mode
-            setRoomData({ roomId: '', roomName: '' });
-            setIsEditing(false);
-            const response1 = await fetch('https://examproctoringmanagement.azurewebsites.net/api/Room');
-            setRooms(await response1.json());
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-    
-    
-
     const handleEditButtonClick = (room) => {
         setRoomData({ roomId: room.roomId, roomName: room.roomName });
         setIsEditing(true);
         setShowModal(true);  // Open modal for editing
     };
+    
+
+    const handleGroupIdChange = (e) => {
+        setRoomData((prevData) => ({
+            ...prevData,
+            group: { ...prevData.group, groupId: e.target.value },
+        }));
+    };
+
+    const handleCreateGroup = () => {
+        fetch('https://examproctoringmanagement.azurewebsites.net/api/Group/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(roomData),
+        })
+            .then((response) => response.json())
+            .then((newGroup) => {
+                console.log('Group created successfully:', newGroup);
+                setRoomData({ roomId: '', group: { groupId: '' } });
+                setShowModal(false);
+            })
+            .catch((err) => console.error('Error creating group:', err));
+    };
 
     const handleCreateButtonClick = () => {
-        setRoomData({ roomId: '', roomName: '' });
+        setRoomData({ roomId: '', group: { groupId: '' } });
         setIsEditing(false);
-        setShowModal(true);  // Open modal for creating
+        setShowModal(true);
     };
 
     if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">{error}</div>;
-    if (rooms.length === 0) return <div className="no-rooms">No rooms available</div>;
 
     return (
         <div className="rooms-container">
             <h2>Rooms List</h2>
             
-            <button onClick={handleCreateButtonClick} className="create-btn">Create Room</button>
+            <button onClick={handleCreateButtonClick} className="create-btn">Create Group</button>
 
             <table className="rooms-table">
                 <thead>
@@ -121,38 +99,44 @@ const Room = () => {
                 </tbody>
             </table>
 
-            {/* Modal for Create/Edit Room */}
+            {/* Modal for Create Group */}
             {showModal && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>{isEditing ? 'Edit Room' : 'Create Room'}</h3>
+                        <h3>Create Group</h3>
                         <form>
                             <div className="form-group">
-                                <label htmlFor="roomId">Room ID:</label>
+                                <label htmlFor="groupId">Group ID:</label>
                                 <input
                                     type="text"
+                                    id="groupId"
+                                    name="groupId"
+                                    value={roomData.group.groupId}
+                                    onChange={handleGroupIdChange}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="roomId">Select Room:</label>
+                                <select
                                     id="roomId"
                                     name="roomId"
                                     value={roomData.roomId}
                                     onChange={handleInputChange}
                                     required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="roomName">Room Name:</label>
-                                <input
-                                    type="text"
-                                    id="roomName"
-                                    name="roomName"
-                                    value={roomData.roomName}
-                                    onChange={handleInputChange}
-                                    required
-                                />
+                                >
+                                    <option value="">Select a room</option>
+                                    {rooms.map((room) => (
+                                        <option key={room.roomId} value={room.roomId}>
+                                            {room.roomName}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="form-actions">
-                                <button type="button" onClick={isEditing ? handleEdit : handleCreate}>
-                                    {isEditing ? 'Update Room' : 'Create Room'}
+                                <button type="button" onClick={handleCreateGroup}>
+                                    Create Group
                                 </button>
                                 <button type="button" onClick={() => setShowModal(false)}>
                                     Cancel
