@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import './Exams.css'; 
-import axios from 'axios'; 
+import './Exams.css';
+import axios from 'axios';
 
 const Exams = () => {
     const [exams, setExams] = useState([]);
@@ -10,6 +10,8 @@ const Exams = () => {
     const [error, setError] = useState(null);
     const [statusFilter, setStatusFilter] = useState('All');
     const [showCreateForm, setShowCreateForm] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentExam, setCurrentExam] = useState(null);
     const [formData, setFormData] = useState({
         examId: '',
         examName: '',
@@ -67,10 +69,40 @@ const Exams = () => {
         try {
             await axios.post('https://examproctoringmanagement.azurewebsites.net/api/Exam', formData);
             alert('Exam created successfully!');
-            setShowCreateForm(false); 
+            setShowCreateForm(false);
         } catch (error) {
-            console.error("Error creating exam:", error);
-            alert("Failed to create exam.");
+            console.error('Error creating exam:', error);
+            alert('Failed to create exam.');
+        }
+    };
+
+    const handleEdit = (exam) => {
+        setIsEditing(true);
+        setCurrentExam(exam);
+        setFormData({
+            examId: exam.examId,
+            examName: exam.examName,
+            type: exam.type,
+            fromDate: new Date(exam.fromDate).toISOString().split('T')[0], // Format date to YYYY-MM-DD
+            toDate: new Date(exam.toDate).toISOString().split('T')[0], // Format date to YYYY-MM-DD
+            semesterId: exam.semesterId,
+            status: exam.status,
+        });
+    };
+    
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.put('https://examproctoringmanagement.azurewebsites.net/api/Exam', formData);
+            alert('Exam updated successfully!');
+            setIsEditing(false);
+            setFilteredExams(exams.map((exam) =>
+                exam.examId === formData.examId ? { ...exam, ...formData } : exam
+            ));
+        } catch (error) {
+            console.error('Error updating exam:', error);
+            alert('Failed to update exam.');
         }
     };
 
@@ -86,41 +118,61 @@ const Exams = () => {
                 {showCreateForm ? 'Cancel' : 'Create Exam'}
             </button>
 
-            {showCreateForm && (
-                <form onSubmit={handleSubmit} className="create-exam-form">
-                    <h3>Create Exam</h3>
-                    <input type="text" name="examId" placeholder="Exam ID" value={formData.examId} onChange={handleChange} required />
-                    <input type="text" name="examName" placeholder="Exam Name" value={formData.examName} onChange={handleChange} required />
-                    <input type="text" name="type" placeholder="Type" value={formData.type} onChange={handleChange} required />
-                    <input type="date" name="fromDate" value={formData.fromDate} onChange={handleChange} required />
-                    <input type="date" name="toDate" value={formData.toDate} onChange={handleChange} required />
-                    
-                    <label>
-                        Semester:
-                        <select
-                            name="semesterId"
-                            value={formData.semesterId}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="">Select Semester</option>
-                            {semesters.map((semester) => (
-                                <option key={semester.semesterId} value={semester.semesterId}>
-                                    {semester.semesterName}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
+            {/* Modal for Edit and Create Exam */}
+            {(showCreateForm || isEditing) && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>{isEditing ? 'Edit Exam' : 'Create Exam'}</h3>
+                        <form onSubmit={isEditing ? handleUpdate : handleSubmit} className="create-exam-form">
+                            <input type="text" name="examId" placeholder="Exam ID" value={formData.examId} onChange={handleChange} required />
+                            <input type="text" name="examName" placeholder="Exam Name" value={formData.examName} onChange={handleChange} required />
+                            <input type="text" name="type" placeholder="Type" value={formData.type} onChange={handleChange} required />
+                            <input type="date" name="fromDate" value={formData.fromDate} onChange={handleChange} required />
+                            <input type="date" name="toDate" value={formData.toDate} onChange={handleChange} required />
 
-                    <label>
-                        Status:
-                        <select name="status" value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value === 'true' })}>
-                            <option value="true">Active</option>
-                            <option value="false">Inactive</option>
-                        </select>
-                    </label>
-                    <button type="submit">Create Exam</button>
-                </form>
+                            <label>
+                                Semester:
+                                <select name="semesterId" value={formData.semesterId} onChange={handleChange} required>
+                                    <option value="">Select Semester</option>
+                                    {semesters.map((semester) => (
+                                        <option key={semester.semesterId} value={semester.semesterId}>
+                                            {semester.semesterName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label>
+                                Status:
+                                <select name="status" value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value === 'true' })}>
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </label>
+                            <button type="submit">{isEditing ? 'Update Exam' : 'Create Exam'}</button>
+                            <button
+                                type="button"
+                                className="cancel-btn"
+                                onClick={() => {
+                                    setIsEditing(false);
+                                    setShowCreateForm(false);
+                                    setFormData({
+                                        examId: '',
+                                        examName: '',
+                                        type: '',
+                                        fromDate: '',
+                                        toDate: '',
+                                        semesterId: '',
+                                        status: true,
+                                    });
+                                }}
+                            >
+                                Cancel
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
             )}
 
             <div className="filter-container">
@@ -146,6 +198,7 @@ const Exams = () => {
                         <th>To Date</th>
                         <th>Semester ID</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -159,6 +212,10 @@ const Exams = () => {
                             <td>{exam.semesterId}</td>
                             <td className={exam.status ? 'status-active' : 'status-inactive'}>
                                 {exam.status ? 'Active' : 'Inactive'}
+                            </td>
+                            <td>
+                                <button onClick={() => handleEdit(exam)}>Edit</button>
+
                             </td>
                         </tr>
                     ))}
