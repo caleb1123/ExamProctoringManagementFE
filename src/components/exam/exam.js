@@ -43,16 +43,17 @@ function Exam() {
 
   const confirmRegistration = () => {
     if (!selectedSchedule) return;
-
+  
     // Create registration data
     const requestData = {
-      proctoringID: selectedSchedule.id
+      proctoringID: selectedSchedule.proctoringId
     };
-
-    // Send registration request
+  
+    // Send registration request with explicit Content-Type
     axios.post("https://examproctoringmanagement.azurewebsites.net/api/RegistrationForm/create", requestData, {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
       }
     })
     .then(() => {
@@ -64,7 +65,7 @@ function Exam() {
       alert("Đăng ký thất bại. Vui lòng thử lại.");
     });
   };
-
+  
   return (
     <div className="schedule-container">
       <h2>Lịch Gác Thi</h2>
