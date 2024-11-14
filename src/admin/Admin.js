@@ -9,6 +9,7 @@ import Subjects from './Subjects'; // Import the Subjects component
 import Room from './Room'; // Import the Room component
 import Group from './Group'; // Import the Group component
 import GroupRoom from './GroupRoom'; // Import the GroupRoom component
+import SlotReference from './SlotReference'; // Import the SlotReference component
 
 const Admin = () => {
     const [activeMenu, setActiveMenu] = useState('Dashboard'); // Track the active menu
@@ -42,6 +43,7 @@ const Admin = () => {
                 {activeMenu === 'Room' && <Room />}  {/* Load the Exams component */}
                 {activeMenu === 'Group' && <Group />}  {/* Load the Exams component */}
                 {activeMenu === 'GroupRoom' && <GroupRoom />}  {/* Load the Exams component */}
+                {activeMenu === 'SlotReference' && <SlotReference />}  {/* Load the Exams component */}
             </div>
         </div>
     );
