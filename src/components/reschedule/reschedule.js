@@ -128,7 +128,7 @@ const Reschedule = () => {
                             <option value="">Select Schedule</option>
                             {proctoringSchedules.map((schedule) => (
                                 <option key={schedule.scheduleId} value={schedule.scheduleId}>
-                                    {schedule.scheduleId} - {schedule.date}
+                                    {schedule.scheduleId} - {schedule.proctorType}
                                 </option>
                             ))}
                         </select>
